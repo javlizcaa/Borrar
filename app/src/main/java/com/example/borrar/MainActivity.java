@@ -3,6 +3,7 @@ package com.example.borrar;
 import static com.example.borrar.db.BBDD_Exercise.TABLE_NAME;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,6 +12,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -18,6 +20,7 @@ import com.example.borrar.Adapter.ExercisesListAdapter;
 import com.example.borrar.Classes.ExerciseClass;
 import com.example.borrar.db.BBDD_Exercise;
 import com.example.borrar.db.dbHelper_Exercise;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //RecyclerView
         listExercises=findViewById(R.id.listEx);
         listExercises.setLayoutManager(new LinearLayoutManager(this));
 
@@ -40,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
         //Pass the query below to the adapter in order to place the items
         ExercisesListAdapter adapter= new ExercisesListAdapter(showExercises());
         listExercises.setAdapter(adapter);
+
+        //bottom navigation
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
+        bottomNavigationView.setOnItemSelectedListener(this::onNavigationItemSelected);
 
     }
 
@@ -64,6 +72,25 @@ public class MainActivity extends AppCompatActivity {
         }
         cursor.close();
         return listExercise;
+    }
+
+    //in order to know the selected item of the bottom navigation
+    public boolean onNavigationItemSelected(MenuItem item) {
+        Fragment fragment;
+        int itemId = item.getItemId();
+        if (itemId == R.id.profile_fragment) {
+            fragment = new ProfileFragment();
+        }
+        else if (itemId == R.id.progress_fragment) {
+            fragment = new ProgressFragment();
+        }
+        else {
+            fragment = new ProgramsFragment();
+        }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.navFragment, fragment)
+                .commit();
+        return true;
     }
 
 
