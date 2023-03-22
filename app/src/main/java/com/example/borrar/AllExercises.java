@@ -14,26 +14,26 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.borrar.Adapter.ExercisesListAdapter;
 import com.example.borrar.Classes.ExerciseClass;
-import com.example.borrar.db.BBDD_Exercise;
 import com.example.borrar.db.dbHelper_Exercise;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class AllExercises extends AppCompatActivity {
 
     RecyclerView listExercises;
     ArrayList<ExerciseClass> listArrayExercises;
+
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_all_exercises);
 
         //RecyclerView
         listExercises=findViewById(R.id.listEx);
@@ -41,8 +41,11 @@ public class MainActivity extends AppCompatActivity {
 
         listArrayExercises= new ArrayList<>();
 
+        Bundle datos=getIntent().getExtras();
+        String program=datos.getString("program");
+
         //Pass the query below to the adapter in order to place the items
-        ExercisesListAdapter adapter= new ExercisesListAdapter(showExercises());
+        ExercisesListAdapter adapter= new ExercisesListAdapter(showExercises(program));
         listExercises.setAdapter(adapter);
 
         //bottom navigation
@@ -52,14 +55,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Query to the database
-    public ArrayList<ExerciseClass> showExercises(){
+    public ArrayList<ExerciseClass> showExercises(String program){
         dbHelper_Exercise dbHelper=new dbHelper_Exercise(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ArrayList<ExerciseClass> listExercise=new ArrayList<>();
         ExerciseClass exercise=null;
         Cursor cursor=null;
+        Toast.makeText(getApplicationContext(),program, Toast.LENGTH_LONG).show();
 
-        cursor=db.rawQuery("SELECT * FROM "+ TABLE_NAME, null);
+
+        cursor=db.rawQuery("SELECT * FROM "+ TABLE_NAME+" WHERE PROGRAM == "+program, null);
         if(cursor.moveToFirst()){
             do{
                 exercise=new ExerciseClass();
@@ -88,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             fragment = new ProgramsFragment();
         }
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.navFragment, fragment)
+                .replace(R.id.navFragment2, fragment)
                 .commit();
         return true;
     }

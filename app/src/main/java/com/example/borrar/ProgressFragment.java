@@ -1,5 +1,6 @@
 package com.example.borrar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,4 +15,5 @@ public class ProgressFragment extends Fragment {
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_progress, container, false);
     }
+
 }
