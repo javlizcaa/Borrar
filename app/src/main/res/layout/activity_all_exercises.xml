@@ -52,8 +52,7 @@
                 android:layout_marginTop="40dp"
                 android:layout_marginEnd="327dp"
                 android:layout_marginBottom="123dp"
-                android:onClick="ejecutar_añadir"
-                app:layout_constraintBottom_toTopOf="@+id/bottom_nav_view"
+                android:onClick="ejecutar_add"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/swipe"
@@ -68,6 +67,16 @@
                 android:text="End session"
                 app:layout_constraintStart_toEndOf="@+id/imageButton"
                 app:layout_constraintTop_toBottomOf="@+id/swipe" />
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EZ FIT"
+                app:layout_constraintBottom_toTopOf="@+id/swipe"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>

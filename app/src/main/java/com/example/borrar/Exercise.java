@@ -5,6 +5,7 @@ import static com.example.borrar.db.BBDD_Exercise.TABLE_NAME;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -13,6 +14,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +33,7 @@ public class Exercise extends AppCompatActivity {
 
     TextView name;
     RecyclerView listExercises;
+    ImageView addSameSerie;
     ArrayList<ExerciseClass> listArrayExercises;
     String idText;
     @SuppressLint("MissingInflatedId")
@@ -41,6 +45,7 @@ public class Exercise extends AppCompatActivity {
         Bundle datos=getIntent().getExtras();
         String idText= String.valueOf(datos.getInt("id"));
         ExerciseClass exercise=getExercises(idText);
+        //idText= String.valueOf(exercise.getId());
 
         name=findViewById(R.id.title_EX_Act);
         name.setText(exercise.getName());
@@ -53,9 +58,36 @@ public class Exercise extends AppCompatActivity {
 
 
         //Pass the query below to the adapter in order to place the items
-        idText= String.valueOf(exercise.getId());
         SeriesListAdapter adapter= new SeriesListAdapter(showSeries(idText));
         listExercises.setAdapter(adapter);
+
+
+        //Add serie button
+        addSameSerie= findViewById(R.id.addSameserieBT);
+        addSameSerie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle datos=getIntent().getExtras();
+                String idText= String.valueOf(datos.getInt("id"));
+                addSerie(idText);
+
+            }
+        });
+
+        //Refresh
+        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Bundle datos=getIntent().getExtras();
+                String idText= String.valueOf(datos.getInt("id"));
+                SeriesListAdapter adapter= new SeriesListAdapter(showSeries(idText));
+                listExercises.setAdapter(adapter);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+
 
 
     }
@@ -116,34 +148,38 @@ public class Exercise extends AppCompatActivity {
         Cursor cursor=null;
 
         //get the last serie of that exercise
-        cursor=db.rawQuery("SELECT * FROM "+ BBDD_Serie.TABLE_NAME +" WHERE exercise == "+id, null);
-        if(cursor.moveToLast()){
-                serie=new SeriesClass();
+        try {
+            cursor = db.rawQuery("SELECT * FROM " + BBDD_Serie.TABLE_NAME + " WHERE exercise == " + id, null);
+            if (cursor.moveToLast()) {
+                serie = new SeriesClass();
                 serie.setId(cursor.getInt(0));
                 serie.setExercise(cursor.getInt(1));
                 serie.setRepetitions(cursor.getInt(2));
                 serie.setWeight(cursor.getString(3));
                 serie.setRest(cursor.getString(4));
                 serie.setNotes(cursor.getString(5));
-        }
-        cursor.close();
+            }
+            cursor.close();
+        }catch(Exception e) {Toast.makeText(getApplicationContext(),"Error when adding the serie", Toast.LENGTH_LONG).show();}
 
         //Add the same serie
         try {
-        ContentValues values=new ContentValues();
-        values.put(BBDD_Serie.COLUMN_exercise,serie.getExercise());
-        values.put(BBDD_Serie.COLUMN_weights,serie.getWeight() );
-        values.put(BBDD_Serie.COLUMN_rest,serie.getRest() );
-        values.put(BBDD_Serie.COLUMN_notes,serie.getNotes() );
+            ContentValues values=new ContentValues();
+            values.put(BBDD_Serie.COLUMN_exercise,serie.getExercise());
+            values.put(BBDD_Serie.COLUMN_repetitions,serie.getRepetitions());
+            values.put(BBDD_Serie.COLUMN_weights,serie.getWeight() );
+            values.put(BBDD_Serie.COLUMN_rest,serie.getRest() );
+            values.put(BBDD_Serie.COLUMN_notes,serie.getNotes() );
 
 
-        long newRowId=db.insert(BBDD_Serie.TABLE_NAME,null,values);
-        if(newRowId==-1){
-            Toast.makeText(getApplicationContext(),"Error -1", Toast.LENGTH_LONG).show();
+            long newRowId=db.insert(BBDD_Serie.TABLE_NAME,null,values);
 
-        }else{Toast.makeText(getApplicationContext(),"The exercise has been saved", Toast.LENGTH_LONG).show();}
+            if(newRowId==-1){
+                Toast.makeText(getApplicationContext(),"Error -1", Toast.LENGTH_LONG).show();
 
-        }catch(Exception e) {Toast.makeText(getApplicationContext(),"Error when adding the exercise", Toast.LENGTH_LONG).show();}
+            }else{Toast.makeText(getApplicationContext(),"The new serie has been saved", Toast.LENGTH_LONG).show();}
+
+        }catch(Exception e) {Toast.makeText(getApplicationContext(),"Error when adding the serie", Toast.LENGTH_LONG).show();}
     }
 
     public void ejecutar_add_serie(View v){

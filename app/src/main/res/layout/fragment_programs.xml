@@ -54,6 +54,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView2"
         android:layout_width="363dp"
         android:layout_height="52dp"
         android:layout_marginStart="32dp"
@@ -80,6 +81,40 @@
 
             <ImageView
                 android:id="@+id/imageView4"
+                android:layout_width="57dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="220dp"
+                tools:srcCompat="@drawable/ic_forward" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="363dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="120dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="2dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="ejecutar_Chrono"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:text="Chrono"
+                android:textSize="18dp" />
+
+            <ImageView
+                android:id="@+id/imageView5"
                 android:layout_width="57dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="220dp"

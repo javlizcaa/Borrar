@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.borrar.Adapter.ExercisesListAdapter;
+import com.example.borrar.Adapter.SeriesListAdapter;
 import com.example.borrar.Classes.ExerciseClass;
 import com.example.borrar.db.dbHelper_Exercise;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -50,6 +52,19 @@ public class AllExercises extends AppCompatActivity {
         //bottom navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
         bottomNavigationView.setOnItemSelectedListener(this::onNavigationItemSelected);
+
+        //Refresh
+        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Bundle datos=getIntent().getExtras();
+                String program=datos.getString("program");
+                ExercisesListAdapter adapter= new ExercisesListAdapter(showExercises(program));
+                listExercises.setAdapter(adapter);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
     }
 
@@ -97,7 +112,7 @@ public class AllExercises extends AppCompatActivity {
 
 
 
-    public void ejecutar_añadir(View v){
+    public void ejecutar_add(View v){
         Intent i=new Intent(this,AddExercise.class);
         Bundle datos=getIntent().getExtras();
         String program=datos.getString("program");

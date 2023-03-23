@@ -51,4 +51,13 @@ public class MainActivity2 extends AppCompatActivity {
         i.putExtra("program","1");
         startActivity(i);
     }
+    public void ejecutar_Chrono(View v){
+        Intent i=new Intent(this,chrono.class);
+        startActivity(i);
+    }
+    public void ejecutar_editProfile(View v){
+        Intent i=new Intent(this,EditProfile.class);
+        startActivity(i);
+    }
+
 }
