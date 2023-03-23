@@ -14,7 +14,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.borrar.Adapter.ExercisesListAdapter;
 import com.example.borrar.Classes.ExerciseClass;
@@ -36,7 +35,7 @@ public class AllExercises extends AppCompatActivity {
         setContentView(R.layout.activity_all_exercises);
 
         //RecyclerView
-        listExercises=findViewById(R.id.listEx);
+        listExercises=findViewById(R.id.listSeries);
         listExercises.setLayoutManager(new LinearLayoutManager(this));
 
         listArrayExercises= new ArrayList<>();
@@ -61,8 +60,6 @@ public class AllExercises extends AppCompatActivity {
         ArrayList<ExerciseClass> listExercise=new ArrayList<>();
         ExerciseClass exercise=null;
         Cursor cursor=null;
-        Toast.makeText(getApplicationContext(),program, Toast.LENGTH_LONG).show();
-
 
         cursor=db.rawQuery("SELECT * FROM "+ TABLE_NAME+" WHERE PROGRAM == "+program, null);
         if(cursor.moveToFirst()){
@@ -70,7 +67,7 @@ public class AllExercises extends AppCompatActivity {
                 exercise=new ExerciseClass();
                 exercise.setId(cursor.getInt(0));
                 exercise.setName(cursor.getString(1));
-                exercise.setProgram(cursor.getString(2));
+                exercise.setProgram(cursor.getInt(2));
 
                 listExercise.add(exercise);
             } while(cursor.moveToNext());
@@ -102,6 +99,9 @@ public class AllExercises extends AppCompatActivity {
 
     public void ejecutar_añadir(View v){
         Intent i=new Intent(this,AddExercise.class);
+        Bundle datos=getIntent().getExtras();
+        String program=datos.getString("program");
+        i.putExtra("program",program);
         startActivity(i);
     }
 }

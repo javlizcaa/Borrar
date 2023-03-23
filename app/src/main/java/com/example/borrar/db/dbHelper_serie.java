@@ -9,30 +9,19 @@ import androidx.annotation.Nullable;
 public class dbHelper_serie extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSOIN=1;
-    private static final String DATABASE_NOMBRE="EZ_FIT.db";
-    private static final String TABLE_SERIE="t_Serie";
-
-
-
+    private static final String DATABASE_NOMBRE="EZ_FIT2.db";
 
     public dbHelper_serie(@Nullable Context context) {
         super(context, DATABASE_NOMBRE, null, DATABASE_VERSOIN);
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE" + TABLE_SERIE + "("+
-                "id INTEGER PRIMARY KEY AUTOINCREMENT,"+
-                "Exercise INTEGER NOT NULL,"+
-                "Repetitions INTEGER NOT NULL,"+
-                "Weight DOUBLE NOT NULL,"+
-                "Notes TEXT NOT NULL)");
+    public void onCreate(SQLiteDatabase db) {db.execSQL(BBDD_Serie.SQL_CREATE_ENTRIES);}
 
-    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE"+ TABLE_SERIE);
+        db.execSQL(BBDD_Serie.SQL_DELETE_ENTRIES);
         onCreate(db);
 
     }

@@ -8,46 +8,52 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.borrar.Classes.ExerciseClass;
 import com.example.borrar.db.BBDD_Exercise;
+import com.example.borrar.db.BBDD_Serie;
 import com.example.borrar.db.dbHelper_Exercise;
+import com.example.borrar.db.dbHelper_serie;
 
-public class AddExercise extends AppCompatActivity {
+public class AddSerie extends AppCompatActivity {
 
+    TextView repetitions,wieght,rest,notes;
     Button ButtonAdd;
-    EditText nombre,program;
-
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_exercise);
+        setContentView(R.layout.activity_add_serie);
 
-        ButtonAdd=(Button)findViewById(R.id.ADD);
+        repetitions=findViewById(R.id.repetitions);
+        wieght=findViewById(R.id.weight);
+        rest=findViewById(R.id.rest);
+        notes=findViewById(R.id.notes);
 
-        nombre=(EditText)findViewById(R.id.name_add);
-        //program=(EditText)findViewById(R.id.program_add);
+        ButtonAdd=(Button)findViewById(R.id.Add_firstSerie);
 
         ButtonAdd.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 try {
-                    dbHelper_Exercise helper=new dbHelper_Exercise(AddExercise.this);
+                    dbHelper_serie helper=new dbHelper_serie(AddSerie.this);
                     SQLiteDatabase db=helper.getWritableDatabase();
 
                     ContentValues values=new ContentValues();
-                    values.put(BBDD_Exercise.COLUMN_name,nombre.getText().toString());
 
                     Bundle datos=getIntent().getExtras();
-                    String program=datos.getString("program");
-                    int program_int = Integer.parseInt(program);
-                    values.put(BBDD_Exercise.COLUMN_program,program_int );
+                    int id=datos.getInt("id");
+                    values.put(BBDD_Serie.COLUMN_exercise,id);
+                    values.put(BBDD_Serie.COLUMN_repetitions,Integer.parseInt(repetitions.getText().toString()));
+                    values.put(BBDD_Serie.COLUMN_weights,wieght.getText().toString());
+                    values.put(BBDD_Serie.COLUMN_rest,rest.getText().toString());
+                    values.put(BBDD_Serie.COLUMN_notes,notes.getText().toString());
 
-                    long newRowId=db.insert(BBDD_Exercise.TABLE_NAME,null,values);
+                    long newRowId=db.insert(BBDD_Serie.TABLE_NAME,null,values);
                     if(newRowId==-1){
                         Toast.makeText(getApplicationContext(),"Error -1", Toast.LENGTH_LONG).show();
 

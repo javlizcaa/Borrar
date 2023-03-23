@@ -4,7 +4,7 @@ public class ExerciseClass {
 
     private int id;
     private String name;
-    private String Program;
+    private int Program;
 
     public int getId() {
         return id;
@@ -22,11 +22,11 @@ public class ExerciseClass {
         this.name = name;
     }
 
-    public String getProgram() {
+    public int getProgram() {
         return Program;
     }
 
-    public void setProgram(String program) {
-        Program = program;
+    public void setProgram(int program) {
+        this.Program = program;
     }
 }
