@@ -24,10 +24,13 @@ import com.example.borrar.Adapter.SeriesListAdapter;
 import com.example.borrar.Classes.ExerciseClass;
 import com.example.borrar.Classes.SeriesClass;
 import com.example.borrar.db.BBDD_Serie;
+import com.example.borrar.db.BBDD_Session;
 import com.example.borrar.db.dbHelper_Exercise;
 import com.example.borrar.db.dbHelper_serie;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class Exercise extends AppCompatActivity {
 
@@ -35,7 +38,7 @@ public class Exercise extends AppCompatActivity {
     RecyclerView listExercises;
     ImageView addSameSerie;
     ArrayList<ExerciseClass> listArrayExercises;
-    String idText;
+    TextView finis_ex;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +48,49 @@ public class Exercise extends AppCompatActivity {
         Bundle datos=getIntent().getExtras();
         String idText= String.valueOf(datos.getInt("id"));
         ExerciseClass exercise=getExercises(idText);
-        //idText= String.valueOf(exercise.getId());
 
         name=findViewById(R.id.title_EX_Act);
         name.setText(exercise.getName());
+
+        //Finish exercise
+        finis_ex=findViewById(R.id.finish_ex);
+        finis_ex.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<SeriesClass> listSeries;
+                Bundle datos=getIntent().getExtras();
+                String idText= String.valueOf(datos.getInt("id"));
+                listSeries= showSeries(idText);
+                for(SeriesClass serie : listSeries) {
+                    try {
+                        dbHelper_serie helper=new dbHelper_serie(Exercise.this);
+                        SQLiteDatabase db=helper.getWritableDatabase();
+
+                        ContentValues values=new ContentValues();
+                        values.put(BBDD_Session.COLUMN_serie,serie.getId());
+                        //Fecha
+                        Calendar calendario = Calendar.getInstance();
+                        int day = calendario.get(Calendar.DAY_OF_MONTH);
+                        int month = calendario.get(Calendar.MONTH) + 1;
+                        int year = calendario.get(Calendar.YEAR);
+                        String fecha = String.valueOf(day);
+                        values.put(BBDD_Session.COLUMN_date, fecha);
+
+
+                        long newRowId=db.insert(BBDD_Session.TABLE_NAME,null,values);
+                        if(newRowId==-1){
+                            Toast.makeText(getApplicationContext(),"Error -1", Toast.LENGTH_LONG).show();
+
+                        }else{Toast.makeText(getApplicationContext(),"The exercise has been saved", Toast.LENGTH_LONG).show();}
+
+                    }catch(Exception e) {Toast.makeText(getApplicationContext(),"Error when adding the exercise", Toast.LENGTH_LONG).show();}
+
+
+                }
+
+
+            }
+        });
 
         //RecyclerView
         listExercises=findViewById(R.id.listSeries);

@@ -38,6 +38,7 @@ public class SeriesListAdapter extends RecyclerView.Adapter<SeriesListAdapter.Se
         holder.viewWeight.setText(listSeries.get(position).getWeight());
         holder.viewRest.setText(listSeries.get(position).getRest());
         holder.viewNotes.setText(listSeries.get(position).getNotes());
+
     }
 
     @Override

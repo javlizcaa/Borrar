@@ -15,6 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.borrar.Adapter.ExercisesListAdapter;
 import com.example.borrar.Adapter.SeriesListAdapter;
@@ -28,6 +29,9 @@ public class AllExercises extends AppCompatActivity {
 
     RecyclerView listExercises;
     ArrayList<ExerciseClass> listArrayExercises;
+    TextView mysession;
+    Boolean started;
+    Boolean finish;
 
 
     @SuppressLint("MissingInflatedId")
@@ -35,6 +39,23 @@ public class AllExercises extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_exercises);
+
+        //start session
+        started=Boolean.FALSE;
+        finish=Boolean.FALSE;
+        mysession=findViewById(R.id.session);
+        mysession.setText("Start session");
+        mysession.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (started==Boolean.FALSE){
+                    mysession.setText("End session");
+                    started=Boolean.TRUE;
+                }else{finish=Boolean.TRUE;}
+
+            }
+        });
+
 
         //RecyclerView
         listExercises=findViewById(R.id.listSeries);
@@ -49,9 +70,6 @@ public class AllExercises extends AppCompatActivity {
         ExercisesListAdapter adapter= new ExercisesListAdapter(showExercises(program));
         listExercises.setAdapter(adapter);
 
-        //bottom navigation
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
-        bottomNavigationView.setOnItemSelectedListener(this::onNavigationItemSelected);
 
         //Refresh
         SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe);
@@ -90,27 +108,6 @@ public class AllExercises extends AppCompatActivity {
         cursor.close();
         return listExercise;
     }
-
-    //in order to know the selected item of the bottom navigation
-    public boolean onNavigationItemSelected(MenuItem item) {
-        Fragment fragment;
-        int itemId = item.getItemId();
-        if (itemId == R.id.profile_fragment) {
-            fragment = new ProfileFragment();
-        }
-        else if (itemId == R.id.progress_fragment) {
-            fragment = new ProgressFragment();
-        }
-        else {
-            fragment = new ProgramsFragment();
-        }
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.navFragment2, fragment)
-                .commit();
-        return true;
-    }
-
-
 
     public void ejecutar_add(View v){
         Intent i=new Intent(this,AddExercise.class);
