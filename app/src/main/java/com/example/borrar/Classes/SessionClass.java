@@ -1,10 +1,18 @@
 package com.example.borrar.Classes;
 
-public class Session {
+public class SessionClass {
 
     private int id;
     private int serie;
     private String date;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public int getId() {
         return id;
@@ -22,11 +30,4 @@ public class Session {
         this.serie = serie;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(int date) {
-        this.date = String.valueOf(date);
-    }
 }

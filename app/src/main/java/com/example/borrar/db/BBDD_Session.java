@@ -5,7 +5,7 @@ public class BBDD_Session {
     public static final String TABLE_NAME="t_Session";
     public static final String COLUMN_id="id";
     public static final String COLUMN_serie="serie";
-    public static final String COLUMN_date="Nombre";
+    public static final String COLUMN_date="date";
 
     private static final String TEXT_TYPE=" TEXT";
     private static final String INT_TYPE=" INTEGER";

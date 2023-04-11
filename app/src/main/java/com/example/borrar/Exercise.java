@@ -26,6 +26,7 @@ import com.example.borrar.Classes.SeriesClass;
 import com.example.borrar.db.BBDD_Serie;
 import com.example.borrar.db.BBDD_Session;
 import com.example.borrar.db.dbHelper_Exercise;
+import com.example.borrar.db.dbHelper_Session;
 import com.example.borrar.db.dbHelper_serie;
 
 import java.time.LocalDate;
@@ -39,6 +40,7 @@ public class Exercise extends AppCompatActivity {
     ImageView addSameSerie;
     ArrayList<ExerciseClass> listArrayExercises;
     TextView finis_ex;
+    Boolean exercise_done;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,8 @@ public class Exercise extends AppCompatActivity {
 
         //Finish exercise
         finis_ex=findViewById(R.id.finish_ex);
+                //Get todays's workout para ver que tiene que hacer el boton si terminar o ya esta terminado//Todavia no hecho
+
         finis_ex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,7 +67,7 @@ public class Exercise extends AppCompatActivity {
                 listSeries= showSeries(idText);
                 for(SeriesClass serie : listSeries) {
                     try {
-                        dbHelper_serie helper=new dbHelper_serie(Exercise.this);
+                        dbHelper_Session helper=new dbHelper_Session(Exercise.this);
                         SQLiteDatabase db=helper.getWritableDatabase();
 
                         ContentValues values=new ContentValues();
@@ -71,9 +75,9 @@ public class Exercise extends AppCompatActivity {
                         //Fecha
                         Calendar calendario = Calendar.getInstance();
                         int day = calendario.get(Calendar.DAY_OF_MONTH);
-                        int month = calendario.get(Calendar.MONTH) + 1;
+                        int month = calendario.get(Calendar.MONTH);
                         int year = calendario.get(Calendar.YEAR);
-                        String fecha = String.valueOf(day);
+                        String fecha = String.valueOf(day)+String.valueOf(month)+String.valueOf(year);
                         values.put(BBDD_Session.COLUMN_date, fecha);
 
 

@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 public class dbHelper_Session extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSOIN=1;
-    private static final String DATABASE_NOMBRE="EZ_FIT.db";
+    private static final String DATABASE_NOMBRE="EZ_FIT3.db";
 
     public dbHelper_Session(@Nullable Context context) {
         super(context, DATABASE_NOMBRE, null, DATABASE_VERSOIN);
