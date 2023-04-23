@@ -9,6 +9,8 @@ public class BBDD_Serie {
     public static final String COLUMN_weights="weights";
     public static final String COLUMN_rest="rest";
     public static final String COLUMN_notes="notes";
+    public static final String COLUMN_visible="visible";
+
 
     private static final String TEXT_TYPE=" TEXT";
     private static final String INT_TYPE=" INTEGER";
@@ -19,7 +21,8 @@ public class BBDD_Serie {
                     +BBDD_Serie.COLUMN_repetitions+INT_TYPE+COMMA_SEP
                     +BBDD_Serie.COLUMN_weights+TEXT_TYPE+COMMA_SEP
                     +BBDD_Serie.COLUMN_rest+TEXT_TYPE+COMMA_SEP
-                    +BBDD_Serie.COLUMN_notes+TEXT_TYPE+" )";
+                    +BBDD_Serie.COLUMN_notes+TEXT_TYPE+COMMA_SEP
+                    +BBDD_Serie.COLUMN_visible+INT_TYPE+" )";
     public static final String SQL_DELETE_ENTRIES=
             "DROP TABLE IF EXISTS"+ BBDD_Serie.TABLE_NAME;
 }

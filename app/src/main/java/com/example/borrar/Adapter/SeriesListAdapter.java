@@ -1,10 +1,18 @@
 package com.example.borrar.Adapter;
 
+import static com.example.borrar.db.BBDD_Exercise.TABLE_NAME;
+
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +21,9 @@ import com.example.borrar.Classes.ExerciseClass;
 import com.example.borrar.Classes.SeriesClass;
 import com.example.borrar.Exercise;
 import com.example.borrar.R;
+import com.example.borrar.db.BBDD_Serie;
+import com.example.borrar.db.dbHelper_Exercise;
+import com.example.borrar.db.dbHelper_serie;
 
 import java.util.ArrayList;
 
@@ -39,6 +50,33 @@ public class SeriesListAdapter extends RecyclerView.Adapter<SeriesListAdapter.Se
         holder.viewRest.setText(listSeries.get(position).getRest());
         holder.viewNotes.setText(listSeries.get(position).getNotes());
 
+        holder.del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbHelper_serie dbHelper=new dbHelper_serie(holder.itemView.getContext());
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+                ContentValues values=new ContentValues();
+
+                values.put(BBDD_Serie.COLUMN_id,listSeries.get(holder.getAdapterPosition()).getId());
+                values.put(BBDD_Serie.COLUMN_exercise,listSeries.get(holder.getAdapterPosition()).getExercise());
+                values.put(BBDD_Serie.COLUMN_repetitions,listSeries.get(holder.getAdapterPosition()).getRepetitions());
+                values.put(BBDD_Serie.COLUMN_weights,String.valueOf(listSeries.get(holder.getAdapterPosition()).getWeight()));
+                values.put(BBDD_Serie.COLUMN_rest,String.valueOf(listSeries.get(holder.getAdapterPosition()).getRest()));
+                values.put(BBDD_Serie.COLUMN_notes,String.valueOf(listSeries.get(holder.getAdapterPosition()).getNotes()));
+                values.put(BBDD_Serie.COLUMN_visible,0);
+                String[] args = { String.valueOf(listSeries.get(holder.getAdapterPosition()).getId())}; // Valor del identificador del registro que deseas actualizar
+                try{
+                    db.update(BBDD_Serie.TABLE_NAME, values, "id=?", args);
+                    db.close();
+                    Toast.makeText(holder.itemView.getContext(), "Serie has been deleted", Toast.LENGTH_SHORT).show();
+
+                }catch(Exception e) {Toast.makeText(holder.itemView.getContext(), "Error", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }});
+
     }
 
     @Override
@@ -50,6 +88,7 @@ public class SeriesListAdapter extends RecyclerView.Adapter<SeriesListAdapter.Se
         // Here we match the objects with the view ofthe .xml
 
         TextView viewRepes,viewWeight,viewRest,viewNotes;
+        ImageButton del;
 
         public SerieViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -59,6 +98,10 @@ public class SeriesListAdapter extends RecyclerView.Adapter<SeriesListAdapter.Se
             viewRest=itemView.findViewById(R.id.RestListItem);
             viewNotes=itemView.findViewById(R.id.NotesListItem);
 
+            del=itemView.findViewById(R.id.delete);
+
+
         }
     }
+
 }

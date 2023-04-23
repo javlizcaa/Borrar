@@ -8,7 +8,15 @@ public class SeriesClass {
     private String weight;
     private String rest;
     private String notes;
+    private int visible;
 
+    public int getVisible() {
+        return visible;
+    }
+
+    public void setVisible(int visible) {
+        this.visible = visible;
+    }
 
     public int getId() {return id;}
 

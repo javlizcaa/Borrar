@@ -179,8 +179,9 @@ public class Exercise extends AppCompatActivity {
                 series.setWeight(cursor.getString(3));
                 series.setRest(cursor.getString(4));
                 series.setNotes(cursor.getString(5));
-
-                listSeries.add(series);
+                if(cursor.getInt(6)==1){
+                    listSeries.add(series);
+                }
             } while(cursor.moveToNext());
         }
         cursor.close();
@@ -216,6 +217,7 @@ public class Exercise extends AppCompatActivity {
             values.put(BBDD_Serie.COLUMN_weights,serie.getWeight() );
             values.put(BBDD_Serie.COLUMN_rest,serie.getRest() );
             values.put(BBDD_Serie.COLUMN_notes,serie.getNotes() );
+            values.put(BBDD_Serie.COLUMN_visible,1 );
 
 
             long newRowId=db.insert(BBDD_Serie.TABLE_NAME,null,values);

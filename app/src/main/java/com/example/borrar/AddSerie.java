@@ -52,6 +52,7 @@ public class AddSerie extends AppCompatActivity {
                     values.put(BBDD_Serie.COLUMN_weights,wieght.getText().toString());
                     values.put(BBDD_Serie.COLUMN_rest,rest.getText().toString());
                     values.put(BBDD_Serie.COLUMN_notes,notes.getText().toString());
+                    values.put(BBDD_Serie.COLUMN_visible,1);
 
                     long newRowId=db.insert(BBDD_Serie.TABLE_NAME,null,values);
                     if(newRowId==-1){
