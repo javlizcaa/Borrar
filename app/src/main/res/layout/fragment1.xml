@@ -1,62 +1,198 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintLayout"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".main.PlaceholderFragment">
+    android:rowCount="4"
+    android:columnCount="1"
+    android:alignmentMode="alignMargins"
+    android:columnOrderPreserved="false">
 
-    <androidx.appcompat.widget.Toolbar
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="RESET"
-            android:id="@+id/resetButton"
-            android:background="@null"
-            android:textColor="@color/red"
-            android:textSize="30sp"
-            android:onClick="resetTapped"/>
+        android:orientation="horizontal"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center_vertical">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/timerText1"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="TIMER"
-            android:layout_gravity="center"
-            android:textColor="@color/white"
-            android:textSize="30sp"/>
+            android:layout_weight="1"
+            android:textSize="28sp"
+            android:textAlignment="center"
+            android:text="00:10:00" />
 
         <Button
+            android:id="@+id/startStopButton1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="START"
-            android:id="@+id/startStopButton"
-            android:background="@null"
+            android:textSize="20sp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:textColor="@color/green"
-            android:textSize="30sp"
-            android:layout_gravity="end"
-            android:layout_marginRight="15dp"
-            android:onClick="startStopTapped"/>
+            android:backgroundTint="@color/white"
+            android:elevation="2dp"
+            android:stateListAnimator="@null"/>
 
-    </androidx.appcompat.widget.Toolbar>
-
-
-        <TextView
+        <Button
+            android:id="@+id/resetButton1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="00:00:00"
-            android:id="@+id/timerText"
-            android:textColor="@color/black"
-            android:textSize="60sp"
-            android:layout_gravity="center"
-            android:layout_marginTop="40dp"/>
+            android:text="RESET"
+            android:textSize="20sp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/red"
+            android:elevation="2dp"
+            android:stateListAnimator="@null"/>
+
+    </LinearLayout>
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center_vertical">
 
+        <TextView
+            android:id="@+id/timerText2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="28sp"
+            android:textAlignment="center"
+            android:text="00:15:00" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/startStopButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="START"
+            android:textSize="20sp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textColor="@color/green"
+            android:backgroundTint="@color/white"
+            android:elevation="2dp"
+            android:stateListAnimator="@null"/>
+
+        <Button
+            android:id="@+id/resetButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RESET"
+            android:textSize="20sp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/red"
+            android:elevation="2dp"
+            android:stateListAnimator="@null"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/timerText3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="28sp"
+            android:textAlignment="center"
+            android:text="00:30:00" />
+
+        <Button
+            android:id="@+id/startStopButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="START"
+            android:textSize="20sp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textColor="@color/green"
+            android:backgroundTint="@color/white"
+            android:elevation="2dp"
+            android:stateListAnimator="@null"/>
+
+        <Button
+            android:id="@+id/resetButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RESET"
+            android:textSize="20sp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/red"
+            android:elevation="2dp"
+            android:stateListAnimator="@null"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/timerText4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="28sp"
+            android:textAlignment="center"
+            android:text="01:00:00" />
+
+        <Button
+            android:id="@+id/startStopButton4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="START"
+            android:textSize="20sp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textColor="@color/green"
+            android:backgroundTint="@color/white"
+            android:elevation="2dp"
+            android:stateListAnimator="@null"/>
+
+        <Button
+            android:id="@+id/resetButton4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RESET"
+            android:textSize="20sp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/red"
+            android:elevation="2dp"
+            android:stateListAnimator="@null"/>
+
+    </LinearLayout>
+
+</GridLayout>

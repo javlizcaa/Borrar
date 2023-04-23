@@ -88,7 +88,7 @@ public class SeriesListAdapter extends RecyclerView.Adapter<SeriesListAdapter.Se
         // Here we match the objects with the view ofthe .xml
 
         TextView viewRepes,viewWeight,viewRest,viewNotes;
-        ImageButton del;
+        ImageButton del,edit;
 
         public SerieViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -99,6 +99,8 @@ public class SeriesListAdapter extends RecyclerView.Adapter<SeriesListAdapter.Se
             viewNotes=itemView.findViewById(R.id.NotesListItem);
 
             del=itemView.findViewById(R.id.delete);
+            edit=itemView.findViewById(R.id.edit);
+
 
 
         }

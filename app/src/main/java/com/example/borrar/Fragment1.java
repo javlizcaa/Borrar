@@ -1,13 +1,11 @@
 package com.example.borrar;
 
-
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,123 +13,291 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Locale;
 
-public class Fragment1 extends Fragment
-{
+public class Fragment1 extends Fragment {
 
-    TextView timerText;
-    Button startStopButton;
-    GridLayout mainGrid;
+    private TextView timerText1,timerText2,timerText3,timerText4;
+    private Button startStopButton1,startStopButton2,startStopButton3,startStopButton4, resetButton1, resetButton2, resetButton3, resetButton4;
+    private CountDownTimer countDownTimer1, countDownTimer2, countDownTimer3, countDownTimer4;
+    private boolean timer1Running, timer2Running, timer3Running, timer4Running;
+    private long timeLeftInMillis1 = 600000; // 10 minutes
+    private long timeLeftInMillis2 = 900000; // 15 minutes
+    private long timeLeftInMillis3 = 1800000; // 30 minutes
+    private long timeLeftInMillis4 = 3600000; // 1 hour
+    private long countDownInterval = 1000; // 1 second
 
-    Timer timer;
-    TimerTask timerTask;
-    Double time = 0.0;
-
-    boolean timerStarted = false;
-
-    @Override
-    public View onCreateView(
-            @NonNull LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment1, container, false);
-
-        timerText = view.findViewById(R.id.timerText);
-        startStopButton = view.findViewById(R.id.startStopButton);
-
-        timer = new Timer();
-
-        return view;
+    public Fragment1() {
+        // Required empty public constructor
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment1, container, false);
 
-    public void resetTapped(View view) {
-        AlertDialog.Builder resetAlert = new AlertDialog.Builder(getActivity());
-        resetAlert.setTitle("Reset Timer");
-        resetAlert.setMessage("Are you sure you want to reset the timer?");
-        resetAlert.setPositiveButton("Reset", new DialogInterface.OnClickListener()
-        {
+        timerText1 = rootView.findViewById(R.id.timerText1);
+        timerText2 = rootView.findViewById(R.id.timerText2);
+        timerText3 = rootView.findViewById(R.id.timerText3);
+        timerText4 = rootView.findViewById(R.id.timerText4);
+        startStopButton1 = rootView.findViewById(R.id.startStopButton1);
+        startStopButton2 = rootView.findViewById(R.id.startStopButton2);
+        startStopButton3 = rootView.findViewById(R.id.startStopButton3);
+        startStopButton4 = rootView.findViewById(R.id.startStopButton4);
+        resetButton1 = rootView.findViewById(R.id.resetButton1);
+        resetButton2 = rootView.findViewById(R.id.resetButton2);
+        resetButton3 = rootView.findViewById(R.id.resetButton3);
+        resetButton4 = rootView.findViewById(R.id.resetButton4);
+
+        startStopButton1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if(timerTask != null) {
-                    timerTask.cancel();
-                    setButtonUI("START", R.color.green);
-                    time = 0.0;
-                    timerStarted = false;
-                    timerText.setText(formatTime(0,0,0));
+            public void onClick(View v) {
+                if (timer1Running) {
+                    pauseTimer1();
+                } else {
+                    startTimer1();
                 }
             }
         });
-
-        resetAlert.setNeutralButton("Cancel", new DialogInterface.OnClickListener()
-        {
+        startStopButton2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                // no action
+            public void onClick(View v) {
+                if (timer2Running) {
+                    pauseTimer2();
+                } else {
+                    startTimer2();
+                }
+            }
+        });
+        startStopButton3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (timer3Running) {
+                    pauseTimer3();
+                } else {
+                    startTimer3();
+                }
+            }
+        });
+        startStopButton4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (timer4Running) {
+                    pauseTimer4();
+                } else {
+                    startTimer4();
+                }
+            }
+        });
+        resetButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetTimer1();
             }
         });
 
-        resetAlert.show();
-
-    }
-
-    public void startStopTapped(View view) {
-        if(timerStarted == false)
-        {
-            timerStarted = true;
-            setButtonUI("STOP", R.color.red);
-
-            startTimer();
-        }
-        else
-            {
-                timerStarted = false;
-                setButtonUI("START", R.color.green);
-
-                timerTask.cancel();
-            }
-        }
-
-    private void setButtonUI(String start, int color) {
-        startStopButton.setText(start);
-        startStopButton.setTextColor(ContextCompat.getColor(getActivity(), color));
-    }
-
-    private void  startTimer()
-    {
-        timerTask = new TimerTask()
-        {
+        resetButton2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run()
-            {
-                getActivity().runOnUiThread(new Runnable()
-                {
-                    @Override
-                    public void run() {
-                        time++;
-                        timerText.setText(getTimerText());
-                    }
-                });
+            public void onClick(View v) {
+                resetTimer2();
             }
-        };
-        timer.scheduleAtFixedRate(timerTask, 0, 1000);
+        });
+
+        resetButton3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetTimer3();
+            }
+        });
+        resetButton4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetTimer4();
+            }
+        });
+
+        updateTimerText1();
+        updateTimerText2();
+        updateTimerText3();
+        updateTimerText4();
+
+        resetButton1.setVisibility(View.INVISIBLE);
+        resetButton2.setVisibility(View.INVISIBLE);
+        resetButton3.setVisibility(View.INVISIBLE);
+        resetButton4.setVisibility(View.INVISIBLE);
+
+        return rootView;
     }
 
-    private String getTimerText() {
-        int rounded = (int) Math.round(time);
+    private void startTimer1() {
+        countDownTimer1 = new CountDownTimer(timeLeftInMillis1, countDownInterval) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeLeftInMillis1 = millisUntilFinished;
+                updateTimerText1();
+            }
 
-        int seconds = ((rounded % 86400) % 3600) % 60;
-        int minutes = ((rounded % 86400) % 3600) / 60;
-        int hours = ((rounded % 86400) / 3600);
+            @Override
+            public void onFinish() {
+                timer1Running = false;
+                startStopButton1.setText("START");
+                startStopButton1.setTextColor(ContextCompat.getColor(requireContext(), R.color.green));
+                resetButton1.setVisibility(View.VISIBLE);
+            }
+        }.start();
 
-        return formatTime(seconds, minutes, hours);
+        timer1Running = true;
+        startStopButton1.setText("STOP");
+        startStopButton1.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
+        resetButton1.setVisibility(View.INVISIBLE);
+    }
+    private void startTimer2() {
+        countDownTimer2 = new CountDownTimer(timeLeftInMillis2, countDownInterval) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeLeftInMillis2 = millisUntilFinished;
+                updateTimerText2();
+            }
+
+            @Override
+            public void onFinish() {
+                timer2Running = false;
+                startStopButton2.setText("START");
+                startStopButton2.setTextColor(ContextCompat.getColor(requireContext(), R.color.green));
+                resetButton2.setVisibility(View.VISIBLE);
+            }
+        }.start();
+
+        timer2Running = true;
+        startStopButton2.setText("STOP");
+        startStopButton2.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
+        resetButton2.setVisibility(View.INVISIBLE);
+    }
+    private void startTimer3() {
+        countDownTimer3 = new CountDownTimer(timeLeftInMillis3, countDownInterval) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeLeftInMillis3 = millisUntilFinished;
+                updateTimerText3();
+            }
+
+            @Override
+            public void onFinish() {
+                timer3Running = false;
+                startStopButton3.setText("START");
+                startStopButton3.setTextColor(ContextCompat.getColor(requireContext(), R.color.green));
+                resetButton3.setVisibility(View.VISIBLE);
+            }
+        }.start();
+
+        timer3Running = true;
+        startStopButton3.setText("STOP");
+        startStopButton3.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
+        resetButton3.setVisibility(View.INVISIBLE);
+    }
+    private void startTimer4() {
+        countDownTimer4 = new CountDownTimer(timeLeftInMillis4, countDownInterval) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeLeftInMillis4 = millisUntilFinished;
+                updateTimerText4();
+            }
+
+            @Override
+            public void onFinish() {
+                timer4Running = false;
+                startStopButton4.setText("START");
+                startStopButton4.setTextColor(ContextCompat.getColor(requireContext(), R.color.green));
+                resetButton4.setVisibility(View.VISIBLE);
+            }
+        }.start();
+
+        timer4Running = true;
+        startStopButton4.setText("STOP");
+        startStopButton4.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
+        resetButton4.setVisibility(View.INVISIBLE);
     }
 
-    private String formatTime(int seconds, int minutes, int hours)
-    {
-        return String.format("%02d",hours) + " : " + String.format("%02d",minutes) + " : " + String.format("%02d",seconds);
+    private void pauseTimer1() {
+        countDownTimer1.cancel();
+        timer1Running = false;
+        startStopButton1.setText("START");
+        startStopButton1.setTextColor(ContextCompat.getColor(requireContext(), R.color.green));
+        resetButton1.setVisibility(View.VISIBLE);
+    }
+    private void pauseTimer2() {
+        countDownTimer2.cancel();
+        timer2Running = false;
+        startStopButton2.setText("START");
+        startStopButton2.setTextColor(ContextCompat.getColor(requireContext(), R.color.green));
+        resetButton2.setVisibility(View.VISIBLE);
+    }
+    private void pauseTimer3() {
+        countDownTimer3.cancel();
+        timer3Running = false;
+        startStopButton3.setText("START");
+        startStopButton3.setTextColor(ContextCompat.getColor(requireContext(), R.color.green));
+        resetButton3.setVisibility(View.VISIBLE);
+    }
+    private void pauseTimer4() {
+        countDownTimer4.cancel();
+        timer4Running = false;
+        startStopButton4.setText("START");
+        startStopButton4.setTextColor(ContextCompat.getColor(requireContext(), R.color.green));
+        resetButton4.setVisibility(View.VISIBLE);
+    }
+
+    private void resetTimer1() {
+        timeLeftInMillis1 = 600000;
+        updateTimerText1();
+        resetButton1.setVisibility(View.INVISIBLE);
+        startStopButton1.setVisibility(View.VISIBLE);
+    }
+    private void resetTimer2() {
+        timeLeftInMillis2 = 900000;
+        updateTimerText2();
+        resetButton2.setVisibility(View.INVISIBLE);
+        startStopButton2.setVisibility(View.VISIBLE);
+    }
+    private void resetTimer3() {
+        timeLeftInMillis3 = 1800000;
+        updateTimerText3();
+        resetButton3.setVisibility(View.INVISIBLE);
+        startStopButton3.setVisibility(View.VISIBLE);
+    }
+    private void resetTimer4() {
+        timeLeftInMillis4 = 3600000;
+        updateTimerText4();
+        resetButton4.setVisibility(View.INVISIBLE);
+        startStopButton4.setVisibility(View.VISIBLE);
+    }
+
+    private void updateTimerText1() {
+        int hours = (int) (timeLeftInMillis1 / (1000 * 60 * 60));
+        int minutes = (int) ((timeLeftInMillis1 / (1000 * 60)) % 60);
+        int seconds = (int) (timeLeftInMillis1 / 1000) % 60;
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
+        timerText1.setText(timeLeftFormatted);
+    }
+    private void updateTimerText2() {
+        int hours = (int) (timeLeftInMillis2 / (1000 * 60 * 60));
+        int minutes = (int) ((timeLeftInMillis2 / (1000 * 60)) % 60);
+        int seconds = (int) (timeLeftInMillis2 / 1000) % 60;
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
+        timerText2.setText(timeLeftFormatted);
+    }
+    private void updateTimerText3() {
+        int hours = (int) (timeLeftInMillis3 / (1000 * 60 * 60));
+        int minutes = (int) ((timeLeftInMillis3 / (1000 * 60)) % 60);
+        int seconds = (int) (timeLeftInMillis3 / 1000) % 60;
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
+        timerText3.setText(timeLeftFormatted);
+    }
+    private void updateTimerText4() {
+        int hours = (int) (timeLeftInMillis4 / (1000 * 60 * 60));
+        int minutes = (int) ((timeLeftInMillis4 / (1000 * 60)) % 60);
+        int seconds = (int) (timeLeftInMillis4 / 1000) % 60;
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
+        timerText4.setText(timeLeftFormatted);
     }
 }
-
-
