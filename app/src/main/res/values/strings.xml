@@ -9,4 +9,5 @@
     <string name="pause">PAUSE</string>
     <string name="reset">RESET</string>
     <string name="stop">STOP</string>
+    <string name="title_activity_near_by_gyms">nearByGyms</string>
 </resources>
