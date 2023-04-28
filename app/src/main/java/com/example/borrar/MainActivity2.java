@@ -5,7 +5,9 @@ import static com.example.borrar.db.BBDD_Exercise.TABLE_NAME;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -41,7 +43,12 @@ public class MainActivity2 extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view2);
         bottomNavigationView.setOnItemSelectedListener(this::onNavigationItemSelected);
 
-        //Progress
+        // Recuperar el nombre de usuario de SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
+        String username = sharedPreferences.getString("username", ""); // "" es un valor por defecto en caso de que no se haya guardado ningún nombre de usuario
+        Toast.makeText(getApplicationContext(),"Welcome "+username, Toast.LENGTH_LONG).show();
+
+    //Progress
         String date;
         int day;
         int month;

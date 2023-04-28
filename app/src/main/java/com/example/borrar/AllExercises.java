@@ -116,4 +116,9 @@ public class AllExercises extends AppCompatActivity {
         i.putExtra("program",program);
         startActivity(i);
     }
+
+    public void ejecutar_Register(View v){
+        Intent i=new Intent(this,Register.class);
+        startActivity(i);
+    }
 }
