@@ -9,7 +9,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import com.example.borrar.Adapter.ExercisesListAdapter;
 import com.example.borrar.Adapter.SeriesListAdapter;
 import com.example.borrar.Classes.ExerciseClass;
 import com.example.borrar.Classes.SeriesClass;
+import com.example.borrar.db.BBDD_Exercise;
 import com.example.borrar.db.BBDD_Serie;
 import com.example.borrar.db.BBDD_Session;
 import com.example.borrar.db.dbHelper_Exercise;
@@ -80,6 +83,9 @@ public class Exercise extends AppCompatActivity {
                         String fecha = String.valueOf(day)+String.valueOf(month)+String.valueOf(year);
                         values.put(BBDD_Session.COLUMN_date, fecha);
 
+                        String Str_userID=getUserId();
+                        int userID=Integer.parseInt(Str_userID);
+                        values.put(BBDD_Session.COLUMN_userID, userID);
 
                         long newRowId=db.insert(BBDD_Session.TABLE_NAME,null,values);
                         if(newRowId==-1){
@@ -155,6 +161,7 @@ public class Exercise extends AppCompatActivity {
                 exercise.setId(cursor.getInt(0));
                 exercise.setName(cursor.getString(1));
                 exercise.setProgram(cursor.getInt(2));
+                exercise.setUserID(cursor.getInt(3));
             } while(cursor.moveToNext());
         }
         cursor.close();
@@ -238,5 +245,11 @@ public class Exercise extends AppCompatActivity {
         i.putExtra("id",id);
 
         startActivity(i);
+    }
+
+    public String getUserId() {
+        SharedPreferences sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
+        String userID = sharedPreferences.getString("userID", "");
+        return userID;
     }
 }

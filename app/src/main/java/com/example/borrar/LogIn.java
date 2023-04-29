@@ -53,12 +53,12 @@ public class LogIn extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Password cannot be empty", Toast.LENGTH_LONG).show();
                 }
                 if (!userEmail.isEmpty() && !userPassword.isEmpty()){
-                    Boolean check=CheckLogIn(userEmail,userPassword);
-                    if (check==true){
-                        // Guardar el correo de usuario en SharedPreferences
+                    String ID=CheckLogIn(userEmail,userPassword);
+                    if (ID!="false"){
+                        // Guardar el ID de usuario en SharedPreferences
                         SharedPreferences sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("username", userEmail);
+                        editor.putString("userID", ID);
                         editor.apply();
 
                         Intent i=new Intent(LogIn.this,MainActivity2.class);
@@ -73,7 +73,7 @@ public class LogIn extends AppCompatActivity {
     }
 
     //Query to the database to check credentials
-    public Boolean CheckLogIn(String email,String password ){
+    public String CheckLogIn(String email,String password ){
         dbHelper_User dbHelper=new dbHelper_User(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String DBpassword;
@@ -85,18 +85,19 @@ public class LogIn extends AppCompatActivity {
             if (DBpassword.equals(password)){
                 String name=cursor.getString(1);
                 Toast.makeText(getApplicationContext(),"Loged In as: "+name, Toast.LENGTH_LONG).show();
+                String ID= String.valueOf(cursor.getInt(0));
                 cursor.close();
-                return true;
+                return ID;
             }else{
                 Toast.makeText(getApplicationContext(),"Invalid password", Toast.LENGTH_LONG).show();
                 cursor.close();
-                return false;
+                return "false";
             }
 
         } else {
             Toast.makeText(getApplicationContext(),"Email not found, please register", Toast.LENGTH_LONG).show();
             cursor.close();
-            return false;
+            return "false";
         }
     }
 

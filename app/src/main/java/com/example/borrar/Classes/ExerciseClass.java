@@ -5,6 +5,8 @@ public class ExerciseClass {
     private int id;
     private String name;
     private int Program;
+    private int userID;
+
 
     public int getId() {
         return id;
@@ -29,4 +31,8 @@ public class ExerciseClass {
     public void setProgram(int program) {
         this.Program = program;
     }
+
+    public int getUserID() {return userID;}
+
+    public void setUserID(int userID) {this.userID = userID;}
 }

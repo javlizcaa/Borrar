@@ -61,10 +61,10 @@ public class Register extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Password cannot be empty", Toast.LENGTH_LONG).show();
                 }
 
-                if (!StringName.isEmpty() && !StringEmail.isEmpty() && StringPassword.isEmpty()){
-                    ArrayList<String>  emails=GetEmails();
-                    String userEmail=email.getText().toString();
-                    if (!emails.contains(userEmail)) { //Si el usuario no esta registrado
+                if (!StringName.isEmpty() && !StringEmail.isEmpty() && !StringPassword.isEmpty()) {
+                    ArrayList<String> emails = GetEmails();
+                    String userEmail = email.getText().toString();
+                    if (!emails.contains(userEmail)) { //si no hay usuarios registrados o Si el usuario no esta registrado
                         try {
                             dbHelper_User helper = new dbHelper_User(Register.this);
                             SQLiteDatabase db = helper.getWritableDatabase();
@@ -80,14 +80,19 @@ public class Register extends AppCompatActivity {
                             values.put(BBDD_User.COLUMN_weight, Float.parseFloat(weight.getText().toString()));
 
                             long newRowId = db.insert(BBDD_User.TABLE_NAME, null, values);
-                            if (newRowId == -1) {Toast.makeText(getApplicationContext(), "Error -1", Toast.LENGTH_LONG).show();
+                            if (newRowId == -1) {
+                                Toast.makeText(getApplicationContext(), "Error -1", Toast.LENGTH_LONG).show();
                             } else {
                                 Toast.makeText(getApplicationContext(), "The user has been correctly registered", Toast.LENGTH_LONG).show();
                                 Intent i = new Intent(Register.this, LogIn.class);
                                 startActivity(i);
                             }
-                        } catch (Exception e) {Toast.makeText(getApplicationContext(), "Error in signing in", Toast.LENGTH_LONG).show();}
-                    }else {Toast.makeText(getApplicationContext(), "User is already registered", Toast.LENGTH_LONG).show();}
+                        } catch (Exception e) {
+                            Toast.makeText(getApplicationContext(), "Error in signing in", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "User is already registered", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -102,14 +107,18 @@ public class Register extends AppCompatActivity {
         Cursor cursor=null;
 
         cursor=db.rawQuery("SELECT * FROM "+ BBDD_User.TABLE_NAME, null);
-        if(cursor.moveToFirst()){
-            do{
-                listEmails.add(cursor.getString(3));
+        if (cursor.getCount() > 0) {
+            if (cursor.moveToFirst()) {
+                do {
+                    listEmails.add(cursor.getString(3));
 
-            } while(cursor.moveToNext());
-        }
-        cursor.close();
-        return listEmails;
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            return listEmails;
+        }else {
+            cursor.close();
+            return new ArrayList<>();}
     }
 
     public void ejecutar_LogIn(View v){

@@ -5,6 +5,7 @@ public class SessionClass {
     private int id;
     private int serie;
     private String date;
+    private int userID;
 
     public String getDate() {
         return date;
@@ -30,4 +31,7 @@ public class SessionClass {
         this.serie = serie;
     }
 
+    public int getUserID() {return userID;}
+
+    public void setUserID(int userID) {this.userID = userID;}
 }

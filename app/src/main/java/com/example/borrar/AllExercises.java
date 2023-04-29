@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -67,7 +69,8 @@ public class AllExercises extends AppCompatActivity {
         String program=datos.getString("program");
 
         //Pass the query below to the adapter in order to place the items
-        ExercisesListAdapter adapter= new ExercisesListAdapter(showExercises(program));
+        String userID=getUserId();
+        ExercisesListAdapter adapter= new ExercisesListAdapter(showExercises(program,userID));
         listExercises.setAdapter(adapter);
 
 
@@ -78,7 +81,11 @@ public class AllExercises extends AppCompatActivity {
             public void onRefresh() {
                 Bundle datos=getIntent().getExtras();
                 String program=datos.getString("program");
-                ExercisesListAdapter adapter= new ExercisesListAdapter(showExercises(program));
+
+                SharedPreferences sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
+                String userID = sharedPreferences.getString("userID", "");
+
+                ExercisesListAdapter adapter= new ExercisesListAdapter(showExercises(program,userID));
                 listExercises.setAdapter(adapter);
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -87,14 +94,18 @@ public class AllExercises extends AppCompatActivity {
     }
 
     //Query to the database
-    public ArrayList<ExerciseClass> showExercises(String program){
+    public ArrayList<ExerciseClass> showExercises(String program,String userID){
         dbHelper_Exercise dbHelper=new dbHelper_Exercise(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ArrayList<ExerciseClass> listExercise=new ArrayList<>();
         ExerciseClass exercise=null;
         Cursor cursor=null;
+        if (userID.equals("")){
+            cursor=db.rawQuery("SELECT * FROM "+ TABLE_NAME+" WHERE PROGRAM == "+program, null);
+        }else{
+            cursor=db.rawQuery("SELECT * FROM "+ TABLE_NAME+" WHERE PROGRAM == "+program+" AND userID == " + userID, null);
+        }
 
-        cursor=db.rawQuery("SELECT * FROM "+ TABLE_NAME+" WHERE PROGRAM == "+program, null);
         if(cursor.moveToFirst()){
             do{
                 exercise=new ExerciseClass();
@@ -121,4 +132,10 @@ public class AllExercises extends AppCompatActivity {
         Intent i=new Intent(this,Register.class);
         startActivity(i);
     }
+    public String getUserId() {
+        SharedPreferences sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
+        String userID = sharedPreferences.getString("userID", "");
+        return userID;
+    }
+
 }

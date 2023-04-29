@@ -44,11 +44,9 @@ public class MainActivity2 extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(this::onNavigationItemSelected);
 
         // Recuperar el nombre de usuario de SharedPreferences
-        SharedPreferences sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
-        String username = sharedPreferences.getString("username", ""); // "" es un valor por defecto en caso de que no se haya guardado ningún nombre de usuario
-        Toast.makeText(getApplicationContext(),"Welcome "+username, Toast.LENGTH_LONG).show();
+        String userID=getUserId();
 
-    //Progress
+        //Progress
         String date;
         int day;
         int month;
@@ -155,4 +153,9 @@ public class MainActivity2 extends AppCompatActivity {
         return serie;
     }
 
+    public String getUserId() {
+        SharedPreferences sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
+        String userID = sharedPreferences.getString("userID", "");
+        return userID;
+    }
 }

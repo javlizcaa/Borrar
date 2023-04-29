@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
@@ -47,6 +49,10 @@ public class AddExercise extends AppCompatActivity {
                     int program_int = Integer.parseInt(program);
                     values.put(BBDD_Exercise.COLUMN_program,program_int );
 
+                    String Str_userID=getUserId();
+                    int userID=Integer.parseInt(Str_userID);
+                    values.put(BBDD_Exercise.COLUMN_userID,userID );
+
                     long newRowId=db.insert(BBDD_Exercise.TABLE_NAME,null,values);
                     if(newRowId==-1){
                         Toast.makeText(getApplicationContext(),"Error -1", Toast.LENGTH_LONG).show();
@@ -57,5 +63,11 @@ public class AddExercise extends AppCompatActivity {
 
             }
         });
+    }
+
+    public String getUserId() {
+        SharedPreferences sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
+        String userID = sharedPreferences.getString("userID", "");
+        return userID;
     }
 }
