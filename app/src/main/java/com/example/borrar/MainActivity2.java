@@ -5,6 +5,7 @@ import static com.example.borrar.db.BBDD_Exercise.TABLE_NAME;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,15 +14,20 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.borrar.Classes.ExerciseClass;
 import com.example.borrar.Classes.SeriesClass;
 import com.example.borrar.Classes.SessionClass;
+import com.example.borrar.Classes.UserClass;
 import com.example.borrar.db.BBDD_Serie;
 import com.example.borrar.db.BBDD_Session;
+import com.example.borrar.db.BBDD_User;
 import com.example.borrar.db.dbHelper_Exercise;
 import com.example.borrar.db.dbHelper_Session;
+import com.example.borrar.db.dbHelper_User;
 import com.example.borrar.db.dbHelper_serie;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -30,10 +36,12 @@ import java.util.HashMap;
 
 public class MainActivity2 extends AppCompatActivity {
 
+    //For the progress graphs
     ArrayList<SessionClass> mySessions;
     SeriesClass myserie;
     HashMap<String, Integer> TotalWorkout = new HashMap<>();
     Integer accumulator;
+    //For the edit profile
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,8 +73,6 @@ public class MainActivity2 extends AppCompatActivity {
                 TotalWorkout.put(date, accumulator);
             }
         }
-
-
     }
 
     //in order to know the selected item of the bottom navigation
@@ -88,24 +94,6 @@ public class MainActivity2 extends AppCompatActivity {
         return true;
     }
 
-    public void ejecutar_PullPush(View v){
-        Intent i=new Intent(this,AllExercises.class);
-        i.putExtra("program","0");
-        startActivity(i);
-    }
-    public void ejecutar_Wider(View v){
-        Intent i=new Intent(this,AllExercises.class);
-        i.putExtra("program","1");
-        startActivity(i);
-    }
-    public void ejecutar_Chrono(View v){
-        Intent i=new Intent(this,chrono.class);
-        startActivity(i);
-    }
-    public void ejecutar_editProfile(View v){
-        Intent i=new Intent(this,EditProfile.class);
-        startActivity(i);
-    }
 
     //Query to the database to get the workouts per day
     public ArrayList<SessionClass> getSessionWork(String date){
@@ -158,4 +146,28 @@ public class MainActivity2 extends AppCompatActivity {
         String userID = sharedPreferences.getString("userID", "");
         return userID;
     }
+
+    public void ejecutar_PullPush(View v){
+        Intent i=new Intent(this,AllExercises.class);
+        i.putExtra("program","0");
+        startActivity(i);
+    }
+    public void ejecutar_Wider(View v){
+        Intent i=new Intent(this,AllExercises.class);
+        i.putExtra("program","1");
+        startActivity(i);
+    }
+    public void ejecutar_Chrono(View v){
+        Intent i=new Intent(this,chrono.class);
+        startActivity(i);
+    }
+    public void ejecutar_editProfile(View v){
+        Intent i=new Intent(this,EditProfile.class);
+        startActivity(i);
+    }
+    public void ejecutar_LogIn(View v){
+        Intent i=new Intent(this,LogIn.class);
+        startActivity(i);
+    }
+
 }

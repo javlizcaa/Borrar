@@ -84,7 +84,7 @@ public class LogIn extends AppCompatActivity {
             DBpassword=cursor.getString(4);
             if (DBpassword.equals(password)){
                 String name=cursor.getString(1);
-                Toast.makeText(getApplicationContext(),"Loged In as: "+name, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),"Loged In as: "+name, Toast.LENGTH_LONG).show();
                 String ID= String.valueOf(cursor.getInt(0));
                 cursor.close();
                 return ID;

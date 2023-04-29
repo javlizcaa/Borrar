@@ -79,20 +79,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <Button
-                android:id="@+id/button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="204dp"
-                android:onClick="ejecutar_Register"
-                android:text="Register"
-                app:layout_constraintBottom_toTopOf="@+id/session"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/imageButton"
-                app:layout_constraintTop_toBottomOf="@+id/swipe"
-                app:layout_constraintVertical_bias="0.7" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
 

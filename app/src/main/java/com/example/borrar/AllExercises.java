@@ -128,10 +128,6 @@ public class AllExercises extends AppCompatActivity {
         startActivity(i);
     }
 
-    public void ejecutar_Register(View v){
-        Intent i=new Intent(this,Register.class);
-        startActivity(i);
-    }
     public String getUserId() {
         SharedPreferences sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
         String userID = sharedPreferences.getString("userID", "");
