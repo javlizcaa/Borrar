@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.example.borrar.Classes.SeriesClass;
 import com.example.borrar.Exercise;
 import com.example.borrar.R;
 import com.example.borrar.db.BBDD_Serie;
+import com.example.borrar.db.BBDD_User;
 import com.example.borrar.db.dbHelper_Exercise;
 import com.example.borrar.db.dbHelper_serie;
 
@@ -50,6 +52,7 @@ public class SeriesListAdapter extends RecyclerView.Adapter<SeriesListAdapter.Se
         holder.viewRest.setText(listSeries.get(position).getRest());
         holder.viewNotes.setText(listSeries.get(position).getNotes());
 
+        //Delete serie
         holder.del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,6 +73,33 @@ public class SeriesListAdapter extends RecyclerView.Adapter<SeriesListAdapter.Se
                     db.update(BBDD_Serie.TABLE_NAME, values, "id=?", args);
                     db.close();
                     Toast.makeText(holder.itemView.getContext(), "Serie has been deleted", Toast.LENGTH_SHORT).show();
+
+                }catch(Exception e) {Toast.makeText(holder.itemView.getContext(), "Error", Toast.LENGTH_SHORT).show();
+                }
+            }});
+
+        holder.edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbHelper_serie dbHelper=new dbHelper_serie(holder.itemView.getContext());
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+                ContentValues values=new ContentValues();
+
+                values.put(BBDD_Serie.COLUMN_id,listSeries.get(holder.getAdapterPosition()).getId());
+                values.put(BBDD_Serie.COLUMN_exercise,listSeries.get(holder.getAdapterPosition()).getExercise());
+                values.put(BBDD_Serie.COLUMN_repetitions,holder.viewRepes.getText().toString());
+                values.put(BBDD_Serie.COLUMN_weights,holder.viewWeight.getText().toString());
+                values.put(BBDD_Serie.COLUMN_rest,holder.viewRest.getText().toString());
+                values.put(BBDD_Serie.COLUMN_notes,holder.viewNotes.getText().toString());
+                try{
+                    int numRows = db.update(BBDD_Serie.TABLE_NAME, values, "id = ?", new String[] { String.valueOf(listSeries.get(holder.getAdapterPosition()).getId()) });
+                    if (numRows > 0) {
+                        Toast.makeText(holder.itemView.getContext(), "Serie has been updated", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(holder.itemView.getContext(), "Serie could not be updated", Toast.LENGTH_SHORT).show();
+                    }
+                    db.close();
 
                 }catch(Exception e) {Toast.makeText(holder.itemView.getContext(), "Error", Toast.LENGTH_SHORT).show();
                 }
