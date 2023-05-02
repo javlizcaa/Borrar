@@ -36,12 +36,8 @@ import java.util.HashMap;
 
 public class MainActivity2 extends AppCompatActivity {
 
-    //For the progress graphs
-    ArrayList<SessionClass> mySessions;
-    SeriesClass myserie;
-    HashMap<String, Integer> TotalWorkout = new HashMap<>();
-    Integer accumulator;
-    //For the edit profile
+    TextView n_works;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,28 +47,12 @@ public class MainActivity2 extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view2);
         bottomNavigationView.setOnItemSelectedListener(this::onNavigationItemSelected);
 
-        // Recuperar el nombre de usuario de SharedPreferences
+        //set the total number of workouts
         String userID=getUserId();
 
-        //Progress
-        String date;
-        int day;
-        int month;
-        for(month=1; month<13; month++){
-            for(day=1; day<31; day++){
-                date= String.valueOf(day)+String.valueOf(month)+String.valueOf(2022);
-                mySessions=getSessionWork(date);
-                accumulator=0;
-                for(SessionClass session : mySessions) {
-                    try {
-                        myserie=GetSerie(session.getSerie());
-                        accumulator=accumulator+myserie.getRepetitions();
+        n_works = findViewById(R.id.n_works);
+        //n_works.setText(String.valueOf(getSessionWorks(userID)));
 
-                    }catch (Exception e){ Toast.makeText(getApplicationContext(),"Session not found", Toast.LENGTH_LONG).show();}
-                }
-                TotalWorkout.put(date, accumulator);
-            }
-        }
     }
 
     //in order to know the selected item of the bottom navigation
@@ -94,52 +74,25 @@ public class MainActivity2 extends AppCompatActivity {
         return true;
     }
 
-
-    //Query to the database to get the workouts per day
-    public ArrayList<SessionClass> getSessionWork(String date){
+    //Query to the database to get the number of workouts
+    public int getSessionWorks(String userID){
         dbHelper_Session dbHelper=new dbHelper_Session(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ArrayList<SessionClass> listSession=new ArrayList<>();
-        SessionClass session=null;
+        int n_session=0;
         Cursor cursor=null;
-        cursor=db.rawQuery("SELECT * FROM "+ BBDD_Session.TABLE_NAME+" WHERE date == "+date, null);
-        if(cursor.moveToFirst()){
-            do{
-                session=new SessionClass();
-                session.setId(cursor.getInt(0));
-                session.setSerie(cursor.getInt(1));
-                session.setDate(cursor.getString(2));
-                listSession.add(session);
+        cursor=db.rawQuery("SELECT * FROM "+ BBDD_Session.TABLE_NAME+" WHERE userID == " + userID, null);
+        if (cursor.getCount() > 0) {
+            if (cursor.moveToFirst()) {
+                do {
+                    n_session+=1;
 
-            } while(cursor.moveToNext());
+                } while (cursor.moveToNext());
+            }
         }
         cursor.close();
-        return listSession;
+        return n_session;
     }
 
-    //Query to the database to get the serie given the session
-    public SeriesClass GetSerie(int serieId){
-        dbHelper_serie dbHelper=new dbHelper_serie(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        SeriesClass serie=null;
-        Cursor cursor=null;
-
-        cursor=db.rawQuery("SELECT * FROM "+ BBDD_Serie.TABLE_NAME+" WHERE id == "+serieId, null);
-        if(cursor.moveToFirst()){
-            do{
-                serie=new SeriesClass();
-                serie.setId(cursor.getInt(0));
-                serie.setExercise(cursor.getInt(1));
-                serie.setRepetitions(cursor.getInt(2));
-                serie.setWeight(cursor.getString(3));
-                serie.setRest(cursor.getString(4));
-                serie.setNotes(cursor.getString(5));
-
-            } while(cursor.moveToNext());
-        }
-        cursor.close();
-        return serie;
-    }
 
     public String getUserId() {
         SharedPreferences sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
