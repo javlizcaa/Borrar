@@ -122,5 +122,9 @@ public class MainActivity2 extends AppCompatActivity {
         Intent i=new Intent(this,LogIn.class);
         startActivity(i);
     }
+    public void ejecutar_nearByGyms(View v){
+        Intent i = new Intent(this,nearByGyms.class);
+        startActivity(i);
+    }
 
 }
