@@ -17,6 +17,20 @@
         android:theme="@style/Theme.Borrar"
         tools:targetApi="31">
         <activity
+            android:name=".ProgressExercise"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".progressAllExercises"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".Register"
             android:exported="false">
             <meta-data
@@ -31,6 +45,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -64,7 +79,6 @@
         <activity
             android:name=".MainActivity2"
             android:exported="false">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

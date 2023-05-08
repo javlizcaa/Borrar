@@ -1,5 +1,11 @@
 package com.example.borrar;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -7,14 +13,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
-
+import com.example.borrar.Adapter.SeriesListAdapter;
+import com.example.borrar.Adapter.SeriesListAdapterProgress;
+import com.example.borrar.Classes.ExerciseClass;
 import com.example.borrar.Classes.SeriesClass;
 import com.example.borrar.Classes.SessionClass;
 import com.example.borrar.db.BBDD_Serie;
@@ -30,13 +34,16 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
-public class ProgressFragment extends Fragment {
+public class ProgressExercise extends AppCompatActivity {
 
     private LineChart chart;
     private List<Float> list1 = new ArrayList<>();
@@ -47,18 +54,23 @@ public class ProgressFragment extends Fragment {
     HashMap<String, Integer> TotalWorkout = new HashMap<>();
     Integer accumulator; //accumulator for storing the workout of each session
 
-    private List<String> names = new ArrayList<>(); //list to store the names of the legend
+    RecyclerView listExercises;
+    ArrayList<ExerciseClass> listArrayExercises;
 
+    String Selected_date;
+
+    private List<String> names = new ArrayList<>(); //list to store the names of the legend
+    @SuppressLint("MissingInflatedId")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_progress, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_progress_exercise);
 
         // Obtener los datos de las listas
         getData();
 
         // Configurar el gráfico
-        chart = view.findViewById(R.id.line_chart);
+        chart = findViewById(R.id.line_chart);
         chart.getDescription().setEnabled(false);
         chart.setTouchEnabled(true);
         chart.setDragEnabled(true);
@@ -72,7 +84,7 @@ public class ProgressFragment extends Fragment {
 
         // Obtener la altura de la pantalla y configurar la altura del gráfico
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = displayMetrics.heightPixels;
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, height / 2);
@@ -118,12 +130,51 @@ public class ProgressFragment extends Fragment {
         }
         legend.setCustom(legendEntries);
 
+        //In order to get the date that the user schoosing
+        chart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                // Obtener la posición seleccionada en el eje X
+                int index = (int) (e.getX());
+                Set<String> dates = TotalWorkout.keySet();
+                Selected_date = String.valueOf(dates.toArray(new String[0])[index]);
 
-        return view;
+            }
+
+            @Override
+            public void onNothingSelected() {
+            }
+        });
+
+
+        //RecyclerView
+        listExercises=findViewById(R.id.listSeries);
+        listExercises.setLayoutManager(new LinearLayoutManager(this));
+
+        listArrayExercises= new ArrayList<>();
+
+        Bundle datos=getIntent().getExtras();
+        String idText= String.valueOf(datos.getInt("id"));
+        //Pass the query below to the adapter in order to place the items
+        SeriesListAdapterProgress adapter= new SeriesListAdapterProgress(showSeries(idText,Selected_date));
+        listExercises.setAdapter(adapter);
+
+        //Refresh
+        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Bundle datos=getIntent().getExtras();
+                String idText= String.valueOf(datos.getInt("id"));
+                SeriesListAdapterProgress adapter= new SeriesListAdapterProgress(showSeries(idText,Selected_date));
+                listExercises.setAdapter(adapter);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
     }
-
     // Clase para formatear los valores del eje X
-    public static class MyXAxisValueFormatter extends ValueFormatter {
+    public class MyXAxisValueFormatter extends ValueFormatter {
 
         private final ArrayList<String> mDates;
 
@@ -145,6 +196,8 @@ public class ProgressFragment extends Fragment {
     private void getData() {
         // Recuperar el nombre de usuario de SharedPreferences
         String userID=getUserId();
+        Bundle datos=getIntent().getExtras();
+        String exercise= String.valueOf(datos.getInt("id"));
 
         String date;
         int day;
@@ -152,14 +205,14 @@ public class ProgressFragment extends Fragment {
 
         for(day=1; day<9; day++){
             date= String.valueOf(day)+String.valueOf(month)+String.valueOf(2023);
-            mySessions=getSessionWork(date,userID);
+            mySessions=getExWork(date,userID,exercise);
             accumulator=0;
             for(SessionClass session : mySessions) {
                 try {
                     myserie=GetSerie(session.getSerie());
                     accumulator=accumulator+myserie.getRepetitions();
 
-                }catch (Exception e){ Toast.makeText(getActivity().getApplicationContext(),"Session not found", Toast.LENGTH_LONG).show();}
+                }catch (Exception e){ Toast.makeText(getApplicationContext(),"Session not found", Toast.LENGTH_LONG).show();}
             }
             list1.add(Float.valueOf(accumulator));
             TotalWorkout.put(date, accumulator);
@@ -232,14 +285,39 @@ public class ProgressFragment extends Fragment {
         chart.setVisibleXRangeMaximum(7);
         chart.setVisibleXRangeMinimum(7);
     }
-    //Query to the database to get the workouts per day
-    public ArrayList<SessionClass> getSessionWork(String date,String userID){
-        dbHelper_Session dbHelper=new dbHelper_Session(getContext());
+    //Query to the database to get the workouts per day i order to make the graph
+    public ArrayList<SessionClass> getExWork(String date,String userID,String exercise){
+        dbHelper_Session dbHelper=new dbHelper_Session(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        dbHelper_serie dbHelper2=new dbHelper_serie(this);
+        SQLiteDatabase db2 = dbHelper2.getWritableDatabase();
+
         ArrayList<SessionClass> listSession=new ArrayList<>();
         SessionClass session=null;
         Cursor cursor=null;
-        cursor=db.rawQuery("SELECT * FROM "+ BBDD_Session.TABLE_NAME+" WHERE date == "+date +" AND userID == " + userID, null);
+        ArrayList<String> serieIDs=new ArrayList<>();
+        String serieIDsStr;
+
+
+        cursor=db2.rawQuery("SELECT * FROM "+ BBDD_Serie.TABLE_NAME+" WHERE exercise == "+exercise, null);
+        if (cursor.getCount() > 0) {
+            if (cursor.moveToFirst()) {
+                do {
+                    String serie_id= String.valueOf(cursor.getInt(0));
+                    serieIDs.add(serie_id);
+
+                } while (cursor.moveToNext());
+            }
+        }
+        cursor.close();
+
+        if (serieIDs.isEmpty()) {
+            serieIDsStr = "()"; // Si la lista está vacía, se utiliza una cadena vacía como valor por defecto
+        } else {
+            serieIDsStr = serieIDs.toString().replace("[", "(").replace("]", ")");// convertir la lista a una cadena de la forma "(1, 2, 3, ...)"
+        }
+        cursor=db.rawQuery("SELECT * FROM "+ BBDD_Session.TABLE_NAME+" WHERE date == "+date +" AND userID == " + userID+" AND serie IN " + serieIDsStr, null);
         if (cursor.getCount() > 0) {
             if (cursor.moveToFirst()) {
                 do {
@@ -255,9 +333,10 @@ public class ProgressFragment extends Fragment {
         cursor.close();
         return listSession;
     }
+
     //Query to the database to get the serie given the session
     public SeriesClass GetSerie(int serieId){
-        dbHelper_serie dbHelper=new dbHelper_serie(getContext());
+        dbHelper_serie dbHelper=new dbHelper_serie(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         SeriesClass serie=null;
         Cursor cursor=null;
@@ -279,9 +358,79 @@ public class ProgressFragment extends Fragment {
         return serie;
     }
     public String getUserId() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences =getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
         String userID = sharedPreferences.getString("userID", "");
         return userID;
     }
-}
 
+    //Query to the database
+    public ArrayList<SeriesClass> showSeries(String idExecise,String date){
+        dbHelper_serie dbHelper=new dbHelper_serie(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        dbHelper_Session dbHelper2=new dbHelper_Session(this);
+        SQLiteDatabase db2 = dbHelper2.getWritableDatabase();
+
+        ArrayList<SeriesClass> listSeries=new ArrayList<>(); //To store all series
+        SeriesClass series=null;
+        Cursor cursor=null;
+
+        ArrayList<String> seriesIDs=new ArrayList<>(); //To store the ids of the series for the query to the session databse
+        ArrayList<String> seriesIDs2=new ArrayList<>(); //To store the ids of the series given the exercise and the session
+
+        String seiresIDsStr;
+        String seiresIDsStr2;
+
+        //Get all ids of the series of that exercise
+        cursor=db.rawQuery("SELECT * FROM "+ BBDD_Serie.TABLE_NAME+" WHERE exercise == "+idExecise, null);
+        if(cursor.moveToFirst()){
+            do{
+
+                seriesIDs.add(String.valueOf(cursor.getInt(0)));
+
+            } while(cursor.moveToNext());
+        }
+        cursor.close();
+
+
+        if (seriesIDs.isEmpty()) {
+            seiresIDsStr = "()"; // Si la lista está vacía, se utiliza una cadena vacía como valor por defecto
+        } else {
+            seiresIDsStr = seriesIDs.toString().replace("[", "(").replace("]", ")");// convertir la lista a una cadena de la forma "(1, 2, 3, ...)"
+        }
+
+        cursor=db2.rawQuery("SELECT * FROM "+ BBDD_Session.TABLE_NAME+" WHERE serie IN "+seiresIDsStr+" AND date == "+date, null);
+        if(cursor.moveToFirst()){
+            do{
+                seriesIDs2.add(String.valueOf(cursor.getInt(0)));
+            } while(cursor.moveToNext());
+        }
+        cursor.close();
+
+        if (seriesIDs2.isEmpty()) {
+            seiresIDsStr2 = "()"; // Si la lista está vacía, se utiliza una cadena vacía como valor por defecto
+        } else {
+            seiresIDsStr2 = seriesIDs2.toString().replace("[", "(").replace("]", ")");// convertir la lista a una cadena de la forma "(1, 2, 3, ...)"
+        }
+
+        cursor=db.rawQuery("SELECT * FROM "+ BBDD_Serie.TABLE_NAME+" WHERE id IN "+seiresIDsStr2, null);
+        if(cursor.moveToFirst()){
+            do{
+                series=new SeriesClass();
+                series.setId(cursor.getInt(0));
+                series.setExercise(cursor.getInt(1));
+                series.setRepetitions(cursor.getInt(2));
+                series.setWeight(cursor.getString(3));
+                series.setRest(cursor.getString(4));
+                series.setNotes(cursor.getString(5));
+                if(cursor.getInt(6)==1){
+                    listSeries.add(series);
+                }
+            } while(cursor.moveToNext());
+        }
+        cursor.close();
+
+
+        return listSeries;
+    }
+}

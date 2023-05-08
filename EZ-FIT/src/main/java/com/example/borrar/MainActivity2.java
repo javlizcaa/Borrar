@@ -1,7 +1,5 @@
 package com.example.borrar;
 
-import static com.example.borrar.db.BBDD_Exercise.TABLE_NAME;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -14,25 +12,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.borrar.Classes.ExerciseClass;
-import com.example.borrar.Classes.SeriesClass;
-import com.example.borrar.Classes.SessionClass;
-import com.example.borrar.Classes.UserClass;
-import com.example.borrar.db.BBDD_Serie;
 import com.example.borrar.db.BBDD_Session;
-import com.example.borrar.db.BBDD_User;
-import com.example.borrar.db.dbHelper_Exercise;
 import com.example.borrar.db.dbHelper_Session;
-import com.example.borrar.db.dbHelper_User;
-import com.example.borrar.db.dbHelper_serie;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MainActivity2 extends AppCompatActivity {
 
@@ -50,7 +34,7 @@ public class MainActivity2 extends AppCompatActivity {
         //set the total number of workouts
         String userID=getUserId();
 
-        n_works = findViewById(R.id.n_works);
+        //n_works = findViewById(R.id.n_works);
         //n_works.setText(String.valueOf(getSessionWorks(userID)));
 
     }
@@ -124,6 +108,10 @@ public class MainActivity2 extends AppCompatActivity {
     }
     public void ejecutar_nearByGyms(View v){
         Intent i = new Intent(this,nearByGyms.class);
+        startActivity(i);
+    }
+    public void ejecutar_ProgresEx(View v){
+        Intent i = new Intent(this, progressAllExercises.class);
         startActivity(i);
     }
 
