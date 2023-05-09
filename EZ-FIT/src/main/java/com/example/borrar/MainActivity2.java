@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import androidx.fragment.app.Fragment;
 
 import com.example.borrar.db.BBDD_Session;
 import com.example.borrar.db.dbHelper_Session;
@@ -30,6 +31,15 @@ public class MainActivity2 extends AppCompatActivity {
         //bottom navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view2);
         bottomNavigationView.setOnItemSelectedListener(this::onNavigationItemSelected);
+
+        //Show first profile fragment
+        Fragment fragment = new ProfileFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.navFragment2, fragment)
+                .show(fragment)
+                .commit();
+
+        bottomNavigationView.setSelectedItemId(R.id.profile_fragment);
 
     }
 
