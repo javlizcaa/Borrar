@@ -98,9 +98,6 @@ public class MainActivity2 extends AppCompatActivity {
         Intent i = new Intent(this, progressAllExercises.class);
         startActivity(i);
     }
-    public void ejecutar_dailyProgres(View v){
-        Intent i = new Intent(this, dailyProgress.class);
-        startActivity(i);
-    }
+
 
 }

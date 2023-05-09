@@ -49,7 +49,6 @@ public class ProgressExercise extends AppCompatActivity {
 
     private LineChart chart;
     private List<Float> list1 = new ArrayList<>();
-    private List<Float> list2 = new ArrayList<>();
     private List<String> listDates = new ArrayList<>();
 
     ArrayList<SessionClass> mySessions;
@@ -124,7 +123,6 @@ public class ProgressExercise extends AppCompatActivity {
         ArrayList<ILineDataSet> dataSets = (ArrayList<ILineDataSet>) chart.getData().getDataSets();
         List<LegendEntry> legendEntries = new ArrayList<>();
         names.add("My workout");
-        names.add("Recomendation");
         for (int i = 0; i < dataSets.size(); i++) {
             String label = names.get(i); // Aquí puedes poner el título que desees
             int color = dataSets.get(i).getColor();
@@ -139,8 +137,7 @@ public class ProgressExercise extends AppCompatActivity {
             public void onValueSelected(Entry e, Highlight h) {
                 // Obtener la posición seleccionada en el eje X
                 int index = (int) (e.getX());
-                System.out.println(index);
-                Selected_date = String.valueOf(listDates.get(index));
+                Selected_date = String.valueOf(listDates.get(index));//Take the last day by default
 
             }
 
@@ -220,7 +217,6 @@ public class ProgressExercise extends AppCompatActivity {
                 }catch (Exception e){ Toast.makeText(getApplicationContext(),"Session not found", Toast.LENGTH_LONG).show();}
             }
             list1.add(Float.valueOf(accumulator));
-            list2.add(30f);
             listDates.add(date);
 
         }
@@ -231,11 +227,9 @@ public class ProgressExercise extends AppCompatActivity {
     private void setData() {
 
         ArrayList<Entry> values1 = new ArrayList<>();
-        ArrayList<Entry> values2 = new ArrayList<>();
 
         for (int i = 0; i < list1.size(); i++) {
             values1.add(new Entry(i, list1.get(i)));
-            values2.add(new Entry(i, list2.get(i)));
         }
 
         // Configurar los datos y las propiedades de la línea 1
@@ -250,22 +244,9 @@ public class ProgressExercise extends AppCompatActivity {
         set1.setFillAlpha(50);
         set1.setFillColor(Color.RED);
 
-        // Configurar los datos y las propiedades de la línea 2
-        LineDataSet set2 = new LineDataSet(values2, "Recommended progress");
-        set2.setColor(Color.BLUE);
-        set2.setLineWidth(2f);
-        set2.setCircleColor(Color.BLUE);
-        set2.setCircleRadius(5f);
-        set2.setDrawCircleHole(false);
-        set2.setValueTextSize(10f);
-        set2.setDrawFilled(true);
-        set2.setFillAlpha(50);
-        set2.setFillColor(Color.BLUE);
-
         // Agregar las líneas al gráfico
         List<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(set1);
-        dataSets.add(set2);
 
         // Crear y configurar los datos del gráfico
         LineData data = new LineData(dataSets);

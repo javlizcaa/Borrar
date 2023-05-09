@@ -33,6 +33,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -149,9 +150,10 @@ public class ProgressFragment extends Fragment {
 
         String date;
         int day;
-        int month=5;
-
-        for(day=3; day<11; day++){
+        Calendar calendario = Calendar.getInstance();
+        int maxday = calendario.get(Calendar.DAY_OF_MONTH);
+        int month = calendario.get(Calendar.MONTH)+1;
+        for(day=1; day<maxday+1; day++){
             date= String.valueOf(day)+"/"+String.valueOf(month)+"/"+String.valueOf(2023);
             mySessions=getSessionWork(date,userID);
             accumulator=0;
@@ -163,19 +165,9 @@ public class ProgressFragment extends Fragment {
                 }catch (Exception e){ Toast.makeText(getActivity().getApplicationContext(),"Session not found", Toast.LENGTH_LONG).show();}
             }
             list1.add(Float.valueOf(accumulator));
+            list2.add(90f);
             listDates.add(date);
         }
-
-
-        list2.add(20f);
-        list2.add(25f);
-        list2.add(35f);
-        list2.add(45f);
-        list2.add(55f);
-        list2.add(65f);
-        list2.add(75f);
-        list2.add(85f);
-        list2.add(95f);
     }
 
 
