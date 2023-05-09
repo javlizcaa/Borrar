@@ -20,7 +20,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity2 extends AppCompatActivity {
 
-    TextView n_works;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +30,6 @@ public class MainActivity2 extends AppCompatActivity {
         //bottom navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view2);
         bottomNavigationView.setOnItemSelectedListener(this::onNavigationItemSelected);
-
-        //set the total number of workouts
-        String userID=getUserId();
-
-        //n_works = findViewById(R.id.n_works);
-        //n_works.setText(String.valueOf(getSessionWorks(userID)));
 
     }
 
@@ -57,26 +51,6 @@ public class MainActivity2 extends AppCompatActivity {
                 .commit();
         return true;
     }
-
-    //Query to the database to get the number of workouts
-    public int getSessionWorks(String userID){
-        dbHelper_Session dbHelper=new dbHelper_Session(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        int n_session=0;
-        Cursor cursor=null;
-        cursor=db.rawQuery("SELECT * FROM "+ BBDD_Session.TABLE_NAME+" WHERE userID == " + userID, null);
-        if (cursor.getCount() > 0) {
-            if (cursor.moveToFirst()) {
-                do {
-                    n_session+=1;
-
-                } while (cursor.moveToNext());
-            }
-        }
-        cursor.close();
-        return n_session;
-    }
-
 
     public String getUserId() {
         SharedPreferences sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
@@ -112,6 +86,10 @@ public class MainActivity2 extends AppCompatActivity {
     }
     public void ejecutar_ProgresEx(View v){
         Intent i = new Intent(this, progressAllExercises.class);
+        startActivity(i);
+    }
+    public void ejecutar_dailyProgres(View v){
+        Intent i = new Intent(this, dailyProgress.class);
         startActivity(i);
     }
 

@@ -160,7 +160,6 @@ public class ProgressExercise extends AppCompatActivity {
         Bundle datos=getIntent().getExtras();
         String idText= String.valueOf(datos.getInt("id"));
         //Pass the query below to the adapter in order to place the items
-        System.out.println(Selected_date);
         SeriesListAdapterProgress adapter= new SeriesListAdapterProgress(showSeries(idText,Selected_date));
         listExercises.setAdapter(adapter);
 
@@ -209,7 +208,7 @@ public class ProgressExercise extends AppCompatActivity {
         Calendar calendario = Calendar.getInstance();
         int maxday = calendario.get(Calendar.DAY_OF_MONTH);
         int month = calendario.get(Calendar.MONTH)+1;
-        for(day=0; day<maxday; day++){
+        for(day=0; day<maxday+1; day++){
             date= String.valueOf(day)+"/"+String.valueOf(month)+"/"+String.valueOf(2023);
             mySessions=getExWork(date,userID,exercise);
             accumulator=0;
@@ -224,12 +223,7 @@ public class ProgressExercise extends AppCompatActivity {
             list2.add(30f);
             listDates.add(date);
 
-
         }
-
-
-
-
     }
 
 
@@ -394,7 +388,6 @@ public class ProgressExercise extends AppCompatActivity {
             } while(cursor.moveToNext());
         }
         cursor.close();
-        System.out.println(seriesIDs.size());
 
         if (seriesIDs.isEmpty()) {
             seiresIDsStr = "()"; // Si la lista está vacía, se utiliza una cadena vacía como valor por defecto
@@ -410,7 +403,6 @@ public class ProgressExercise extends AppCompatActivity {
             } while(cursor.moveToNext());
         }
         cursor.close();
-        System.out.println(seriesIDs2.size());
 
         if (seriesIDs2.isEmpty()) {
             seiresIDsStr2 = "()"; // Si la lista está vacía, se utiliza una cadena vacía como valor por defecto

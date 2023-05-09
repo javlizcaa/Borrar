@@ -21,8 +21,8 @@
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swipe"
-                android:layout_width="400dp"
-                android:layout_height="489dp"
+                android:layout_width="350dp"
+                android:layout_height="491dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.355"
