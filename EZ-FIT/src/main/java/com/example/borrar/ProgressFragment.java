@@ -41,10 +41,11 @@ public class ProgressFragment extends Fragment {
     private LineChart chart;
     private List<Float> list1 = new ArrayList<>();
     private List<Float> list2 = new ArrayList<>();
+    private List<String> listDates = new ArrayList<>();
+
 
     ArrayList<SessionClass> mySessions;
     SeriesClass myserie;
-    HashMap<String, Integer> TotalWorkout = new HashMap<>();
     Integer accumulator; //accumulator for storing the workout of each session
 
     private List<String> names = new ArrayList<>(); //list to store the names of the legend
@@ -84,8 +85,7 @@ public class ProgressFragment extends Fragment {
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1f);
-        ArrayList<String> fechas = new ArrayList<>(TotalWorkout.keySet());
-        xAxis.setValueFormatter(new MyXAxisValueFormatter(fechas));
+        xAxis.setValueFormatter(new MyXAxisValueFormatter((ArrayList<String>) listDates));
 
         // Configurar el eje Y izquierdo
         YAxis leftAxis = chart.getAxisLeft();
@@ -148,10 +148,10 @@ public class ProgressFragment extends Fragment {
 
         String date;
         int day;
-        int month=4;
+        int month=5;
 
-        for(day=1; day<9; day++){
-            date= String.valueOf(day)+String.valueOf(month)+String.valueOf(2023);
+        for(day=3; day<11; day++){
+            date= String.valueOf(day)+"/"+String.valueOf(month)+"/"+String.valueOf(2023);
             mySessions=getSessionWork(date,userID);
             accumulator=0;
             for(SessionClass session : mySessions) {
@@ -162,7 +162,7 @@ public class ProgressFragment extends Fragment {
                 }catch (Exception e){ Toast.makeText(getActivity().getApplicationContext(),"Session not found", Toast.LENGTH_LONG).show();}
             }
             list1.add(Float.valueOf(accumulator));
-            TotalWorkout.put(date, accumulator);
+            listDates.add(date);
         }
 
 
@@ -239,6 +239,7 @@ public class ProgressFragment extends Fragment {
         ArrayList<SessionClass> listSession=new ArrayList<>();
         SessionClass session=null;
         Cursor cursor=null;
+        date=date.replace("/", "");
         cursor=db.rawQuery("SELECT * FROM "+ BBDD_Session.TABLE_NAME+" WHERE date == "+date +" AND userID == " + userID, null);
         if (cursor.getCount() > 0) {
             if (cursor.moveToFirst()) {

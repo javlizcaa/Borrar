@@ -78,7 +78,7 @@ public class Exercise extends AppCompatActivity {
                         //Fecha
                         Calendar calendario = Calendar.getInstance();
                         int day = calendario.get(Calendar.DAY_OF_MONTH);
-                        int month = calendario.get(Calendar.MONTH);
+                        int month = calendario.get(Calendar.MONTH)+1; //Rteurns the motnh starting at 0
                         int year = calendario.get(Calendar.YEAR);
                         String fecha = String.valueOf(day)+String.valueOf(month)+String.valueOf(year);
                         values.put(BBDD_Session.COLUMN_date, fecha);

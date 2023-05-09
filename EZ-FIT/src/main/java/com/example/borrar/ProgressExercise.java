@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -48,10 +50,10 @@ public class ProgressExercise extends AppCompatActivity {
     private LineChart chart;
     private List<Float> list1 = new ArrayList<>();
     private List<Float> list2 = new ArrayList<>();
+    private List<String> listDates = new ArrayList<>();
 
     ArrayList<SessionClass> mySessions;
     SeriesClass myserie;
-    HashMap<String, Integer> TotalWorkout = new HashMap<>();
     Integer accumulator; //accumulator for storing the workout of each session
 
     RecyclerView listExercises;
@@ -96,8 +98,9 @@ public class ProgressExercise extends AppCompatActivity {
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1f);
-        ArrayList<String> fechas = new ArrayList<>(TotalWorkout.keySet());
-        xAxis.setValueFormatter(new MyXAxisValueFormatter(fechas));
+
+        xAxis.setValueFormatter(new MyXAxisValueFormatter((ArrayList<String>) listDates));
+        xAxis.setLabelRotationAngle(50);
 
         // Configurar el eje Y izquierdo
         YAxis leftAxis = chart.getAxisLeft();
@@ -129,20 +132,21 @@ public class ProgressExercise extends AppCompatActivity {
             legendEntries.add(entry);
         }
         legend.setCustom(legendEntries);
-
+        Selected_date = String.valueOf(listDates.get(listDates.size()-1));//Take the last day by default
         //In order to get the date that the user schoosing
         chart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
                 // Obtener la posición seleccionada en el eje X
                 int index = (int) (e.getX());
-                Set<String> dates = TotalWorkout.keySet();
-                Selected_date = String.valueOf(dates.toArray(new String[0])[index]);
+                System.out.println(index);
+                Selected_date = String.valueOf(listDates.get(index));
 
             }
 
             @Override
             public void onNothingSelected() {
+                Selected_date = "8/5/2023";
             }
         });
 
@@ -156,6 +160,7 @@ public class ProgressExercise extends AppCompatActivity {
         Bundle datos=getIntent().getExtras();
         String idText= String.valueOf(datos.getInt("id"));
         //Pass the query below to the adapter in order to place the items
+        System.out.println(Selected_date);
         SeriesListAdapterProgress adapter= new SeriesListAdapterProgress(showSeries(idText,Selected_date));
         listExercises.setAdapter(adapter);
 
@@ -201,10 +206,11 @@ public class ProgressExercise extends AppCompatActivity {
 
         String date;
         int day;
-        int month=4;
-
-        for(day=1; day<9; day++){
-            date= String.valueOf(day)+String.valueOf(month)+String.valueOf(2023);
+        Calendar calendario = Calendar.getInstance();
+        int maxday = calendario.get(Calendar.DAY_OF_MONTH);
+        int month = calendario.get(Calendar.MONTH)+1;
+        for(day=0; day<maxday; day++){
+            date= String.valueOf(day)+"/"+String.valueOf(month)+"/"+String.valueOf(2023);
             mySessions=getExWork(date,userID,exercise);
             accumulator=0;
             for(SessionClass session : mySessions) {
@@ -215,19 +221,15 @@ public class ProgressExercise extends AppCompatActivity {
                 }catch (Exception e){ Toast.makeText(getApplicationContext(),"Session not found", Toast.LENGTH_LONG).show();}
             }
             list1.add(Float.valueOf(accumulator));
-            TotalWorkout.put(date, accumulator);
+            list2.add(30f);
+            listDates.add(date);
+
+
         }
 
 
-        list2.add(20f);
-        list2.add(25f);
-        list2.add(35f);
-        list2.add(45f);
-        list2.add(55f);
-        list2.add(65f);
-        list2.add(75f);
-        list2.add(85f);
-        list2.add(95f);
+
+
     }
 
 
@@ -285,7 +287,7 @@ public class ProgressExercise extends AppCompatActivity {
         chart.setVisibleXRangeMaximum(7);
         chart.setVisibleXRangeMinimum(7);
     }
-    //Query to the database to get the workouts per day i order to make the graph
+    //Query to the database to get the workouts per day in order to make the graph
     public ArrayList<SessionClass> getExWork(String date,String userID,String exercise){
         dbHelper_Session dbHelper=new dbHelper_Session(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -298,8 +300,8 @@ public class ProgressExercise extends AppCompatActivity {
         Cursor cursor=null;
         ArrayList<String> serieIDs=new ArrayList<>();
         String serieIDsStr;
-
-
+        date=date.replace("/", "");
+        //Get all series belonging to that exercise
         cursor=db2.rawQuery("SELECT * FROM "+ BBDD_Serie.TABLE_NAME+" WHERE exercise == "+exercise, null);
         if (cursor.getCount() > 0) {
             if (cursor.moveToFirst()) {
@@ -331,6 +333,7 @@ public class ProgressExercise extends AppCompatActivity {
             }
         }
         cursor.close();
+
         return listSession;
     }
 
@@ -391,7 +394,7 @@ public class ProgressExercise extends AppCompatActivity {
             } while(cursor.moveToNext());
         }
         cursor.close();
-
+        System.out.println(seriesIDs.size());
 
         if (seriesIDs.isEmpty()) {
             seiresIDsStr = "()"; // Si la lista está vacía, se utiliza una cadena vacía como valor por defecto
@@ -399,13 +402,15 @@ public class ProgressExercise extends AppCompatActivity {
             seiresIDsStr = seriesIDs.toString().replace("[", "(").replace("]", ")");// convertir la lista a una cadena de la forma "(1, 2, 3, ...)"
         }
 
+        date=date.replace("/", "");
         cursor=db2.rawQuery("SELECT * FROM "+ BBDD_Session.TABLE_NAME+" WHERE serie IN "+seiresIDsStr+" AND date == "+date, null);
         if(cursor.moveToFirst()){
             do{
-                seriesIDs2.add(String.valueOf(cursor.getInt(0)));
+                seriesIDs2.add(String.valueOf(cursor.getInt(1)));
             } while(cursor.moveToNext());
         }
         cursor.close();
+        System.out.println(seriesIDs2.size());
 
         if (seriesIDs2.isEmpty()) {
             seiresIDsStr2 = "()"; // Si la lista está vacía, se utiliza una cadena vacía como valor por defecto
